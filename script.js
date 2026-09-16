@@ -8078,9 +8078,8 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
                 if (document.getElementById(sId)) document.getElementById(sId).textContent = String(seconds).padStart(2, '0');
             }
 
-            updateTimer(new Date('2027-05-15T08:00:00').getTime(), 'wisuda-days', 'wisuda-hours', 'wisuda-mins', 'wisuda-secs');
-            updateTimer(new Date('2027-04-22T06:30:00').getTime(), 'utbk-days', 'utbk-hours', 'utbk-mins', 'utbk-secs');
-            updateTimer(new Date('2031-08-17T09:00:00').getTime(), 'reuni-days', 'reuni-hours', 'reuni-mins', 'reuni-secs');
+            updateTimer(new Date('2027-05-01T08:00:00').getTime(), 'wisuda-days', 'wisuda-hours', 'wisuda-mins', 'wisuda-secs');
+            updateTimer(new Date('2027-04-22T06:45:00').getTime(), 'utbk-days', 'utbk-hours', 'utbk-mins', 'utbk-secs');
         }
 
         setInterval(updateCountdowns, 1000);
