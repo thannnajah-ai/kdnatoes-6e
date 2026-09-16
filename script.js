@@ -1852,7 +1852,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const PHOTO_ENGINE_VERSION = 'v5_original_pixelator';
     try {
         if (localStorage.getItem('photo_engine_ver') !== PHOTO_ENGINE_VERSION) {
-            for (let i = 1; i <= 36; i++) {
+            for (let i = 1; i <= arcadeCharacters.length; i++) {
                 localStorage.removeItem('char_photo_c' + i);
             }
             localStorage.setItem('photo_engine_ver', PHOTO_ENGINE_VERSION);
@@ -2005,7 +2005,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const cleanTitle = char.title.includes('"') ? char.title : `"${char.title}"`;
             styleEl.textContent = `${char.role} // ${cleanTitle}`;
         }
-        if (slotEl) slotEl.textContent = `FIGHTER ${String(selectedCharIndex + 1).padStart(2, '0')} / 36`;
+        if (slotEl) slotEl.textContent = `FIGHTER ${String(selectedCharIndex + 1).padStart(2, '0')} / ${arcadeCharacters.length}`;
 
         const leadEl = document.getElementById('tekken-stat-lead');
         const energyEl = document.getElementById('tekken-stat-energy');
@@ -4073,7 +4073,7 @@ document.addEventListener("DOMContentLoaded", () => {
             yearbookGrid.innerHTML = `
                 <div style="grid-column: 1/-1; padding: 24px; text-align: center; color: #718096; background: #fff; border: 1px dashed #cbd5e0;">
                     <p style="font-weight: bold; font-size: 14px;">Tidak ada alumni yang sesuai kriteria pencarian "${currentYearbookSearch}".</p>
-                    <small>Coba kata kunci lain atau pilih filter "Semua (36)".</small>
+                    <small>Coba kata kunci lain atau pilih filter "Semua (${arcadeCharacters.length})".</small>
                 </div>
             `;
             return;
@@ -4170,7 +4170,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Guestbook Storage & Management
-    const GB_STORAGE_KEY = 'kdnatoes_guestbook_entries_v2';
+    const GB_STORAGE_KEY = 'kdnatoes_guestbook_entries_v3';
     const defaultGuestbookEntries = [
         {
             id: 'gb_01',
@@ -4183,7 +4183,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         {
             id: 'gb_02',
-            author: 'M. Iqbal Khoirul Anam',
+            author: 'Iqbal Qodama Khoirurrijal',
             status: 'Siswa XII-E',
             sticker: '🚀',
             target: 'Keluarga Besar KDNATOES',
@@ -4192,7 +4192,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         {
             id: 'gb_03',
-            author: 'M. Anas Dingin',
+            author: 'M. Anas Afif Alfadil',
             status: 'Siswa XII-E',
             sticker: '😎',
             target: 'Semua Siswa XII-E',
@@ -4201,10 +4201,10 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         {
             id: 'gb_04',
-            author: 'Nathan R.',
+            author: 'Nathan Ferdwiansyah Wicaksono',
             status: 'Siswa XII-E',
             sticker: '💻',
-            target: 'Seluruh Angkatan 2024-2025',
+            target: 'Keluarga Besar KDNATOES (Angkatan 2027)',
             message: 'Website Windows 95 ini dipersembahkan agar setiap detik kenangan XII-E tetap abadi dalam bentuk kode dan pixel. KDNATOES FOREVER!',
             timestamp: '15/09/2025 11:20'
         }
@@ -4212,12 +4212,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getGuestbookEntries() {
         try {
-            const raw = localStorage.getItem(GB_STORAGE_KEY);
+            let raw = localStorage.getItem(GB_STORAGE_KEY);
+            // Fallback migrasi dari key v2 jika ada
+            if (!raw) {
+                const oldRaw = localStorage.getItem('kdnatoes_guestbook_entries_v2');
+                if (oldRaw) raw = oldRaw;
+            }
             if (!raw) {
                 localStorage.setItem(GB_STORAGE_KEY, JSON.stringify(defaultGuestbookEntries));
                 return defaultGuestbookEntries;
             }
-            return JSON.parse(raw) || defaultGuestbookEntries;
+            let entries = JSON.parse(raw) || defaultGuestbookEntries;
+            // Sinkronisasi otomatis data lama di browser user agar nama personalia selalu update
+            let modified = false;
+            entries = entries.map(item => {
+                if (item.author === 'M. Iqbal Khoirul Anam' || item.author === 'Iqbal Kecil') {
+                    item.author = 'Iqbal Qodama Khoirurrijal';
+                    modified = true;
+                }
+                if (item.author === 'M. Anas Dingin' || item.author === 'Anas Dingin') {
+                    item.author = 'M. Anas Afif Alfadil';
+                    modified = true;
+                }
+                if (item.author === 'Nathan R.') {
+                    item.author = 'Nathan Ferdwiansyah Wicaksono';
+                    modified = true;
+                }
+                if (item.target === 'Seluruh Angkatan 2024-2025') {
+                    item.target = 'Keluarga Besar KDNATOES (Angkatan 2027)';
+                    modified = true;
+                }
+                return item;
+            });
+            if (modified || !localStorage.getItem(GB_STORAGE_KEY)) {
+                localStorage.setItem(GB_STORAGE_KEY, JSON.stringify(entries));
+            }
+            return entries;
         } catch (e) {
             return defaultGuestbookEntries;
         }
@@ -4592,7 +4622,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const examAnswerKey = {
         q1: 'B', // Ust. Misbachul Munir
         q2: 'A', // KDNATOES
-        q3: 'C', // M. Iqbal Khoirul Anam
+        q3: 'C', // Iqbal Qodama Khoirurrijal
         q4: 'A', // Diskusi masuk PTN, nobar layar proyektor
         q5: 'B'  // Lolos PTN Impian, sukses menggapai cita-cita, dan tetap kompak selamanya!
     };
@@ -4720,7 +4750,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.font = "bold 11px 'Times New Roman', serif";
         ctx.fillText("KDNATOES", sealX, sealY + 8);
         ctx.font = "8px 'Arial', sans-serif";
-        ctx.fillText("ANGKATAN 2025", sealX, sealY + 18);
+        ctx.fillText("ANGKATAN 2027", sealX, sealY + 18);
         ctx.restore();
 
         // 8. Signatures
@@ -4731,7 +4761,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.fillText("Ketua Kelas XII - E,", 180, 420);
         ctx.font = "italic 18px 'Brush Script MT', cursive, serif";
         ctx.fillStyle = '#000080';
-        ctx.fillText("M. Iqbal Khoirul Anam", 180, 460);
+        ctx.fillText("Iqbal Qodama Khoirurrijal", 180, 460);
         ctx.strokeStyle = '#718096';
         ctx.beginPath();
         ctx.moveTo(100, 475);
@@ -4739,7 +4769,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.stroke();
         ctx.fillStyle = '#2d3748';
         ctx.font = "bold 11px 'Georgia', serif";
-        ctx.fillText("M. Iqbal Khoirul Anam", 180, 492);
+        ctx.fillText("Iqbal Qodama Khoirurrijal", 180, 492);
         ctx.font = "10px 'Georgia', serif";
         ctx.fillText("KM / Math Master", 180, 508);
 
@@ -7067,8 +7097,12 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
             { nick: 'Asa_Kemal' },
             { nick: 'Asyam_Taufiq' },
             { nick: 'Asyraf_Raziq' },
+            { nick: 'Ayaka_Fawwaz' },
+            { nick: 'Azis_Army' },
+            { nick: 'Bagaskara_Boemi' },
             { nick: 'Damar_AlFathih' },
             { nick: 'Fadel_Thufail' },
+            { nick: 'Faeyza_Jovano' },
             { nick: 'M_Zaidan' },
             { nick: 'M_Wafizzaliq' },
             { nick: 'Muflih_Davin' },
@@ -7078,6 +7112,7 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
             { nick: 'Rizky_Setiawan' },
             { nick: 'Sholahudin_Rasya' },
             { nick: 'Syawal_Satriaji' },
+            { nick: 'Muhammad_Yardan' },
             { nick: 'Nahla_Kemal' },
             { nick: 'Naufal_Surya' },
             { nick: 'Naufal_Syamil' },
@@ -7937,7 +7972,7 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
             { id: 'c13', name: 'Fathu Rizqi', month: 9, day: 10, wish: 'Selamat ulang tahun Pak Sekre Fathu! Arsip kelas selalu rapi!' },
             { id: 'c14', name: 'Iqbal Qodama', month: 9, day: 22, wish: 'Selamat ulang tahun Pak KM Iqbal Qodama! Komandan matematika KDNATOES!' },
             { id: 'c15', name: 'M Zaidan', month: 10, day: 4, wish: 'Barakallah Zaidan! Calon dokter spesialis UNAIR!' },
-            { id: 'c16', name: 'M. Anas Afif', month: 10, day: 16, wish: 'HBD Wakil Ketua Anas Dingin! Kepala dingin, eksekusi presisi!' },
+            { id: 'c16', name: 'M. Anas Afif', month: 10, day: 16, wish: 'HBD Wakil Ketua Anas! Kepala dingin, eksekusi presisi!' },
             { id: 'c17', name: 'M. Wafizzaliq', month: 10, day: 29, wish: 'Selamat ultah Wafizzaliq! Jawara Ilkom UB!' },
             { id: 'c18', name: 'Muflih Davin', month: 11, day: 7, wish: 'Milad saeed Muflih Davin! Sukses Statistika Bisnis ITS!' },
             { id: 'c19', name: 'Fauzan Hilmy', month: 11, day: 19, wish: 'Selamat hari lahir Fauzan! Calon psikolog hebat UGM!' },
