@@ -543,6 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Launch Window from Desktop Icons and Start Menu
     function launchWindow(targetId) {
         if (!targetId) return;
+        if (targetId === 'yearbook-window') targetId = 'kdn-window';
         if (targetId === 'personalia-roster') {
             const strukturWin = document.getElementById('struktur-window');
             const personaliaEl = document.getElementById('personalia-roster');
@@ -586,6 +587,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    // Auto-migrate legacy URL hash in browser address bar to #kdn-window
+    if (window.location.hash === '#yearbook-window') {
+        history.replaceState(null, '', window.location.pathname + '#kdn-window' + window.location.search);
+        launchWindow('kdn-window');
+    }
 
 
     // ----------------------------------------------------------------------
