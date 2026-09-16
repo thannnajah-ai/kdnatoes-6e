@@ -1,7 +1,7 @@
 <div align="center">
 
 # XII-E / KDNATOES
-### *Retro Windows 95 Desktop OS & Tekken 5 Arcade Digital Yearbook*
+### *Retro Windows 95 Desktop OS & Tekken 5 Arcade Digital KDN*
 
 [![GitHub repo size](https://img.shields.io/github/repo-size/thannnajah-ai/kdnatoes-6e?style=for-the-badge&color=008080)](https://github.com/thannnajah-ai/kdnatoes-6e)
 [![PWA Ready](https://img.shields.io/badge/PWA-Installable-blueviolet?style=for-the-badge&logo=pwa)](manifest.json)

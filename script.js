@@ -4019,9 +4019,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    const yearbookGrid = document.getElementById('yearbook-grid');
-    const yearbookSearchInput = document.getElementById('yearbook-search-input');
-    const yearbookChips = document.querySelectorAll('.yearbook-chip');
+    const kdnGrid = document.getElementById('kdn-grid');
+    const kdnSearchInput = document.getElementById('kdn-search-input');
+    const kdnChips = document.querySelectorAll('.kdn-chip');
     const btnTabDirectory = document.getElementById('btn-tab-directory');
     const btnTabGuestbook = document.getElementById('btn-tab-guestbook');
     const tabContentDirectory = document.getElementById('tab-content-directory');
@@ -4032,28 +4032,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnClearGuestbook = document.getElementById('btn-clear-guestbook');
     const wordpadSheet = document.getElementById('wordpad-document-sheet');
 
-    let currentYearbookSearch = '';
-    let currentYearbookCat = 'all';
+    let currentKdnSearch = '';
+    let currentKdnCat = 'all';
 
-    function renderYearbookGrid() {
-        if (!yearbookGrid) return;
-        yearbookGrid.innerHTML = '';
+    function renderKdnGrid() {
+        if (!kdnGrid) return;
+        kdnGrid.innerHTML = '';
 
-        const term = currentYearbookSearch.toLowerCase().trim();
+        const term = currentKdnSearch.toLowerCase().trim();
 
         const filtered = arcadeCharacters.filter((char) => {
             const extra = alumniExtendedData[char.id] || { ptn: 'PTN Impian', career: 'Profesional', ig: '@xii_e' };
 
             // Category filter
-            if (currentYearbookCat === 'pengurus') {
+            if (currentKdnCat === 'pengurus') {
                 if (!['KM', 'WK', 'SK', 'BD'].includes(char.badge)) return false;
-            } else if (currentYearbookCat === 'itb') {
+            } else if (currentKdnCat === 'itb') {
                 if (!extra.ptn.includes('ITB')) return false;
-            } else if (currentYearbookCat === 'ui') {
+            } else if (currentKdnCat === 'ui') {
                 if (!extra.ptn.includes('UI')) return false;
-            } else if (currentYearbookCat === 'ugm') {
+            } else if (currentKdnCat === 'ugm') {
                 if (!extra.ptn.includes('UGM')) return false;
-            } else if (currentYearbookCat === 'its') {
+            } else if (currentKdnCat === 'its') {
                 if (!extra.ptn.includes('ITS')) return false;
             }
 
@@ -4071,9 +4071,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (filtered.length === 0) {
-            yearbookGrid.innerHTML = `
+            kdnGrid.innerHTML = `
                 <div style="grid-column: 1/-1; padding: 24px; text-align: center; color: #718096; background: #fff; border: 1px dashed #cbd5e0;">
-                    <p style="font-weight: bold; font-size: 14px;">Tidak ada alumni yang sesuai kriteria pencarian "${currentYearbookSearch}".</p>
+                    <p style="font-weight: bold; font-size: 14px;">Tidak ada alumni yang sesuai kriteria pencarian "${currentKdnSearch}".</p>
                     <small>Coba kata kunci lain atau pilih filter "Semua (${arcadeCharacters.length})".</small>
                 </div>
             `;
@@ -4083,7 +4083,7 @@ document.addEventListener("DOMContentLoaded", () => {
         filtered.forEach((char) => {
             const extra = alumniExtendedData[char.id] || { ptn: 'PTN Impian', career: 'Profesional', ig: '@xii_e' };
             const card = document.createElement('div');
-            card.className = `yearbook-card ${char.isBoss ? 'is-boss-card' : ''}`;
+            card.className = `kdn-card ${char.isBoss ? 'is-boss-card' : ''}`;
 
             const avatarHtml = char.photo
                 ? `<img src="${char.photo}" alt="${char.name}" onerror="this.style.display='none'; if (this.nextElementSibling) this.nextElementSibling.style.display='block';" />
@@ -4091,53 +4091,53 @@ document.addEventListener("DOMContentLoaded", () => {
                 : `<span>${char.initials}</span>`;
 
             card.innerHTML = `
-                <div class="yearbook-card-top">
-                    <div class="yearbook-card-avatar" style="background: ${char.color};">
+                <div class="kdn-card-top">
+                    <div class="kdn-card-avatar" style="background: ${char.color};">
                         ${avatarHtml}
                     </div>
-                    <div class="yearbook-card-identity">
-                        <div class="yearbook-card-name">${char.name}</div>
-                        <span class="yearbook-card-absen">${char.tag || '#ALUMNI'} • ${char.role}</span>
+                    <div class="kdn-card-identity">
+                        <div class="kdn-card-name">${char.name}</div>
+                        <span class="kdn-card-absen">${char.tag || '#ALUMNI'} • ${char.role}</span>
                         <div style="font-size: 10px; color: #4a5568;"><i>"${char.title}"</i></div>
                     </div>
                 </div>
-                <div class="yearbook-card-details">
-                    <div class="yearbook-detail-row">
-                        <span class="yearbook-detail-label">🎓 Kampus:</span>
-                        <span class="yearbook-detail-value">${extra.ptn}</span>
+                <div class="kdn-card-details">
+                    <div class="kdn-detail-row">
+                        <span class="kdn-detail-label">🎓 Kampus:</span>
+                        <span class="kdn-detail-value">${extra.ptn}</span>
                     </div>
-                    <div class="yearbook-detail-row">
-                        <span class="yearbook-detail-label">🎯 Cita-cita:</span>
-                        <span class="yearbook-detail-value" style="color: #2c7a7b;">${extra.career}</span>
+                    <div class="kdn-detail-row">
+                        <span class="kdn-detail-label">🎯 Cita-cita:</span>
+                        <span class="kdn-detail-value" style="color: #2c7a7b;">${extra.career}</span>
                     </div>
                 </div>
-                <div class="yearbook-card-quote">
+                <div class="kdn-card-quote">
                     “${char.quote}”
                 </div>
-                <div class="yearbook-card-footer">
-                    <span class="yearbook-social-tag">${extra.ig}</span>
-                    <button type="button" class="win-btn yearbook-btn-msg" data-name="${char.name}">
+                <div class="kdn-card-footer">
+                    <span class="kdn-social-tag">${extra.ig}</span>
+                    <button type="button" class="win-btn kdn-btn-msg" data-name="${char.name}">
                         💬 Tulis Pesan
                     </button>
                 </div>
             `;
 
-            const btnMsg = card.querySelector('.yearbook-btn-msg');
+            const btnMsg = card.querySelector('.kdn-btn-msg');
             if (btnMsg) {
                 btnMsg.addEventListener('click', () => {
                     const targetInput = document.getElementById('gb-target');
                     if (targetInput) targetInput.value = char.name;
-                    switchYearbookTab('guestbook');
+                    switchKdnTab('guestbook');
                     const msgInput = document.getElementById('gb-message');
                     if (msgInput) msgInput.focus();
                 });
             }
 
-            yearbookGrid.appendChild(card);
+            kdnGrid.appendChild(card);
         });
     }
 
-    function switchYearbookTab(tabName) {
+    function switchKdnTab(tabName) {
         if (tabName === 'directory') {
             if (btnTabDirectory) btnTabDirectory.classList.add('is-active');
             if (btnTabGuestbook) btnTabGuestbook.classList.remove('is-active');
@@ -4151,22 +4151,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    if (btnTabDirectory) btnTabDirectory.addEventListener('click', () => switchYearbookTab('directory'));
-    if (btnTabGuestbook) btnTabGuestbook.addEventListener('click', () => switchYearbookTab('guestbook'));
+    if (btnTabDirectory) btnTabDirectory.addEventListener('click', () => switchKdnTab('directory'));
+    if (btnTabGuestbook) btnTabGuestbook.addEventListener('click', () => switchKdnTab('guestbook'));
 
-    if (yearbookSearchInput) {
-        yearbookSearchInput.addEventListener('input', (e) => {
-            currentYearbookSearch = e.target.value;
-            renderYearbookGrid();
+    if (kdnSearchInput) {
+        kdnSearchInput.addEventListener('input', (e) => {
+            currentKdnSearch = e.target.value;
+            renderKdnGrid();
         });
     }
 
-    yearbookChips.forEach(chip => {
+    kdnChips.forEach(chip => {
         chip.addEventListener('click', () => {
-            yearbookChips.forEach(c => c.classList.remove('is-active'));
+            kdnChips.forEach(c => c.classList.remove('is-active'));
             chip.classList.add('is-active');
-            currentYearbookCat = chip.dataset.filter || 'all';
-            renderYearbookGrid();
+            currentKdnCat = chip.dataset.filter || 'all';
+            renderKdnGrid();
         });
     });
 
@@ -4437,7 +4437,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    renderYearbookGrid();
+    renderKdnGrid();
     renderGuestbookFeed();
 
     // ======================================================================

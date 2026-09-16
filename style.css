@@ -297,7 +297,7 @@ a, button, [role="button"], input, select, textarea {
     width: 380px;
 }
 
-#yearbook-window {
+#kdn-window {
     top: 32px;
     left: 190px;
     width: 900px;
@@ -2641,7 +2641,7 @@ a, button, [role="button"], input, select, textarea {
    FEATURE 1: WORDPAD 97 BUKU TAHUNAN & BUKU TAMU ALUMNI (BukuTahunan.doc)
    ========================================================================== */
 
-.yearbook-window {
+.kdn-window {
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
@@ -2767,12 +2767,12 @@ a, button, [role="button"], input, select, textarea {
 }
 
 /* Document Header */
-.yearbook-header {
+.kdn-header {
     text-align: center;
     margin-bottom: 18px;
 }
 
-.yearbook-seal {
+.kdn-seal {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -2791,7 +2791,7 @@ a, button, [role="button"], input, select, textarea {
     letter-spacing: 1px;
 }
 
-.yearbook-title {
+.kdn-title {
     font-family: var(--font-pixel), 'Times New Roman', serif;
     font-size: 24px;
     font-weight: 800;
@@ -2800,7 +2800,7 @@ a, button, [role="button"], input, select, textarea {
     margin-bottom: 4px;
 }
 
-.yearbook-subtitle {
+.kdn-subtitle {
     font-size: 12px;
     color: #4a5568;
     font-weight: 600;
@@ -2808,16 +2808,16 @@ a, button, [role="button"], input, select, textarea {
     margin-bottom: 6px;
 }
 
-.yearbook-meta {
+.kdn-meta {
     font-size: 11px;
     color: #718096;
 }
 
-.yearbook-meta span b {
+.kdn-meta span b {
     color: #2d3748;
 }
 
-.yearbook-double-line {
+.kdn-double-line {
     height: 4px;
     border-top: 2px solid #000080;
     border-bottom: 1px solid #000080;
@@ -2826,7 +2826,7 @@ a, button, [role="button"], input, select, textarea {
 }
 
 /* Nav Tabs */
-.yearbook-nav-tabs {
+.kdn-nav-tabs {
     display: flex;
     gap: 6px;
     margin-bottom: 14px;
@@ -2834,19 +2834,19 @@ a, button, [role="button"], input, select, textarea {
     padding-bottom: 4px;
 }
 
-.yearbook-tab-btn {
+.kdn-tab-btn {
     font-size: 12px;
     font-weight: bold;
     padding: 6px 14px;
 }
 
-.yearbook-tab-btn.is-active {
+.kdn-tab-btn.is-active {
     background: #000080 !important;
     color: #ffffff !important;
 }
 
 /* Search Bar & Filter Chips */
-.yearbook-search-bar {
+.kdn-search-bar {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -2856,7 +2856,7 @@ a, button, [role="button"], input, select, textarea {
     flex-wrap: wrap;
 }
 
-.yearbook-search-bar input {
+.kdn-search-bar input {
     flex: 1;
     min-width: 180px;
     padding: 4px 8px;
@@ -2864,13 +2864,13 @@ a, button, [role="button"], input, select, textarea {
     background: #ffffff;
 }
 
-.yearbook-filter-chips {
+.kdn-filter-chips {
     display: flex;
     gap: 4px;
     flex-wrap: wrap;
 }
 
-.yearbook-chip {
+.kdn-chip {
     background: #ffffff;
     border: 1px solid #7f7f7f;
     padding: 2px 8px;
@@ -2879,11 +2879,11 @@ a, button, [role="button"], input, select, textarea {
     cursor: var(--cursor-pointer);
 }
 
-.yearbook-chip:hover {
+.kdn-chip:hover {
     background: #edf2f7;
 }
 
-.yearbook-chip.is-active {
+.kdn-chip.is-active {
     background: #000080;
     color: #ffffff;
     border-color: #000080;
@@ -2891,13 +2891,13 @@ a, button, [role="button"], input, select, textarea {
 }
 
 /* Alumni Grid & Cards */
-.yearbook-grid {
+.kdn-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 14px;
 }
 
-.yearbook-card {
+.kdn-card {
     background: #ffffff;
     border: 1px solid #d4d0c8;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
@@ -2909,23 +2909,23 @@ a, button, [role="button"], input, select, textarea {
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.yearbook-card:hover {
+.kdn-card:hover {
     transform: translateY(-3px);
     box-shadow: 3px 5px 12px rgba(0, 0, 0, 0.2);
 }
 
-.yearbook-card.is-boss-card {
+.kdn-card.is-boss-card {
     border-top-color: #d4af37;
     background: #fffdfa;
 }
 
-.yearbook-card-top {
+.kdn-card-top {
     display: flex;
     gap: 10px;
     margin-bottom: 8px;
 }
 
-.yearbook-card-avatar {
+.kdn-card-avatar {
     width: 64px;
     height: 72px;
     border: 1px solid #000;
@@ -2937,26 +2937,26 @@ a, button, [role="button"], input, select, textarea {
     overflow: hidden;
 }
 
-.yearbook-card-avatar img {
+.kdn-card-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     image-rendering: pixelated;
 }
 
-.yearbook-card-avatar span {
+.kdn-card-avatar span {
     font-family: var(--font-pixel);
     font-size: 20px;
     font-weight: bold;
     color: #fff;
 }
 
-.yearbook-card-identity {
+.kdn-card-identity {
     flex: 1;
     overflow: hidden;
 }
 
-.yearbook-card-name {
+.kdn-card-name {
     font-weight: 800;
     font-size: 13px;
     color: #1a202c;
@@ -2964,7 +2964,7 @@ a, button, [role="button"], input, select, textarea {
     margin-bottom: 2px;
 }
 
-.yearbook-card-absen {
+.kdn-card-absen {
     font-size: 10px;
     font-weight: bold;
     color: #718096;
@@ -2975,7 +2975,7 @@ a, button, [role="button"], input, select, textarea {
     margin-bottom: 4px;
 }
 
-.yearbook-card-details {
+.kdn-card-details {
     font-size: 11px;
     display: flex;
     flex-direction: column;
@@ -2983,24 +2983,24 @@ a, button, [role="button"], input, select, textarea {
     margin-bottom: 8px;
 }
 
-.yearbook-detail-row {
+.kdn-detail-row {
     display: flex;
     gap: 4px;
 }
 
-.yearbook-detail-label {
+.kdn-detail-label {
     color: #718096;
     font-weight: 600;
     min-width: 68px;
     flex-shrink: 0;
 }
 
-.yearbook-detail-value {
+.kdn-detail-value {
     color: #2b6cb0;
     font-weight: 700;
 }
 
-.yearbook-card-quote {
+.kdn-card-quote {
     background: #f7fafc;
     border-left: 3px solid #cbd5e0;
     padding: 6px 8px;
@@ -3012,7 +3012,7 @@ a, button, [role="button"], input, select, textarea {
     flex: 1;
 }
 
-.yearbook-card-footer {
+.kdn-card-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -3022,13 +3022,13 @@ a, button, [role="button"], input, select, textarea {
     margin-top: auto;
 }
 
-.yearbook-social-tag {
+.kdn-social-tag {
     color: #805ad5;
     font-weight: bold;
     text-decoration: none;
 }
 
-.yearbook-btn-msg {
+.kdn-btn-msg {
     font-size: 10px !important;
     padding: 2px 6px !important;
 }
@@ -5166,7 +5166,7 @@ body.theme-gold .desktop-icon-label {
     #tugas-window,
     #struktur-window,
     #galeri-window,
-    #yearbook-window,
+    #kdn-window,
     #exam-window,
     #campus-window,
     #photobooth-window,
@@ -5397,7 +5397,7 @@ body.theme-gold .desktop-icon-label {
         padding: 4px !important;
     }
 
-    /* 8. Specific App Fixes: WordPad / Yearbook */
+    /* 8. Specific App Fixes: WordPad / KDN */
     .wordpad-sheet {
         width: 100% !important;
         max-width: 100% !important;
@@ -5406,7 +5406,7 @@ body.theme-gold .desktop-icon-label {
         box-shadow: none !important;
     }
 
-    .yearbook-grid {
+    .kdn-grid {
         grid-template-columns: 1fr !important;
         gap: 8px !important;
     }

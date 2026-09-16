@@ -128,7 +128,7 @@
             </a>
 
             <!-- Buku Tahunan WordPad -->
-            <a href="#yearbook-window" class="desktop-icon" id="icon-yearbook"
+            <a href="#kdn-window" class="desktop-icon" id="icon-kdn"
                 title="Buka Buku Tahunan & Buku Tamu Alumni">
                 <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6 3h14l6 6v20H6V3z" fill="#ffffff" stroke="#000" stroke-width="2" />
@@ -1553,7 +1553,7 @@
                  WINDOW 8: BUKU TAHUNAN & BUKU TAMU ALUMNI (BukuTahunan.doc)
                  WordPad 97 Retro Windows Interface
                  ============================================================ -->
-            <section class="win-window win-outset yearbook-window" id="yearbook-window" aria-labelledby="yearbook-title"
+            <section class="win-window win-outset kdn-window" id="kdn-window" aria-labelledby="kdn-title"
                 style="display: none;">
                 <!-- Titlebar -->
                 <div class="win-titlebar">
@@ -1564,7 +1564,7 @@
                             <rect x="2" y="7" width="12" height="2" fill="#000080" />
                             <rect x="2" y="11" width="8" height="2" fill="#000080" />
                         </svg>
-                        <span id="yearbook-title">BukuTahunan.doc - WordPad Kelas XII-E</span>
+                        <span id="kdn-title">BukuTahunan.doc - WordPad Kelas XII-E</span>
                     </div>
                     <div class="win-title-buttons">
                         <button class="win-btn-ctrl win-outset" aria-label="Minimize Window">_</button>
@@ -1628,57 +1628,57 @@
                 <div class="wordpad-viewport win-inset">
                     <article class="wordpad-sheet" id="wordpad-document-sheet">
                         <!-- Header Kertas Dokumen -->
-                        <div class="yearbook-header">
-                            <div class="yearbook-seal">
+                        <div class="kdn-header">
+                            <div class="kdn-seal">
                                 <div class="seal-inner">★ XII-E ★</div>
                             </div>
-                            <h1 class="yearbook-title">BUKU TAHUNAN DIGITAL KELAS XII - E</h1>
-                            <p class="yearbook-subtitle">KDNATOES • ANGKATAN 2024-2027 • SMAN / MADRASAH ALIYAH NEGERI
+                            <h1 class="kdn-title">BUKU TAHUNAN DIGITAL KELAS XII - E</h1>
+                            <p class="kdn-subtitle">KDNATOES • ANGKATAN 2024-2027 • SMAN / MADRASAH ALIYAH NEGERI
                             </p>
-                            <p class="yearbook-meta">
+                            <p class="kdn-meta">
                                 <span>Wali Kelas: <b>Ust. Misbachul Munir</b></span> •
                                 <span>Ketua Kelas: <b>Iqbal Qodama Khoirurrijal</b></span> •
                                 <span>Jumlah: <b>32 Siswa</b></span>
                             </p>
-                            <div class="yearbook-double-line"></div>
+                            <div class="kdn-double-line"></div>
                         </div>
 
                         <!-- Tab Navigasi Dokumen -->
-                        <div class="yearbook-nav-tabs">
-                            <button class="win-btn yearbook-tab-btn is-active" id="btn-tab-directory"
+                        <div class="kdn-nav-tabs">
+                            <button class="win-btn kdn-tab-btn is-active" id="btn-tab-directory"
                                 data-tab="directory">
                                 🎓 Direktori Alumni (32 Siswa)
                             </button>
-                            <button class="win-btn yearbook-tab-btn" id="btn-tab-guestbook" data-tab="guestbook">
+                            <button class="win-btn kdn-tab-btn" id="btn-tab-guestbook" data-tab="guestbook">
                                 ✍️ Buku Tamu & Coretan Kenangan (<span id="guestbook-count-badge">0</span>)
                             </button>
                         </div>
 
                         <!-- TAB 1: Direktori Alumni -->
-                        <div class="yearbook-tab-content is-active" id="tab-content-directory">
+                        <div class="kdn-tab-content is-active" id="tab-content-directory">
                             <!-- Filter & Search Bar -->
-                            <div class="yearbook-search-bar win-outset">
+                            <div class="kdn-search-bar win-outset">
                                 <span style="font-weight: bold; font-size: 11px;">🔍 Cari Alumni:</span>
-                                <input type="text" id="yearbook-search-input" class="win-inset"
+                                <input type="text" id="kdn-search-input" class="win-inset"
                                     placeholder="Ketik nama, PTN impian, atau cita-cita..." />
-                                <div class="yearbook-filter-chips">
-                                    <button class="yearbook-chip is-active" data-filter="all">Semua (32)</button>
-                                    <button class="yearbook-chip" data-filter="pengurus">Pengurus</button>
-                                    <button class="yearbook-chip" data-filter="itb">ITB</button>
-                                    <button class="yearbook-chip" data-filter="ui">UI</button>
-                                    <button class="yearbook-chip" data-filter="ugm">UGM</button>
-                                    <button class="yearbook-chip" data-filter="its">ITS</button>
+                                <div class="kdn-filter-chips">
+                                    <button class="kdn-chip is-active" data-filter="all">Semua (32)</button>
+                                    <button class="kdn-chip" data-filter="pengurus">Pengurus</button>
+                                    <button class="kdn-chip" data-filter="itb">ITB</button>
+                                    <button class="kdn-chip" data-filter="ui">UI</button>
+                                    <button class="kdn-chip" data-filter="ugm">UGM</button>
+                                    <button class="kdn-chip" data-filter="its">ITS</button>
                                 </div>
                             </div>
 
                             <!-- Student Cards Grid -->
-                            <div class="yearbook-grid" id="yearbook-grid">
+                            <div class="kdn-grid" id="kdn-grid">
                                 <!-- Populated dynamically by script.js -->
                             </div>
                         </div>
 
                         <!-- TAB 2: Buku Tamu Alumni (Guestbook) -->
-                        <div class="yearbook-tab-content" id="tab-content-guestbook" style="display: none;">
+                        <div class="kdn-tab-content" id="tab-content-guestbook" style="display: none;">
                             <div class="guestbook-intro-box win-outset">
                                 <h3 style="margin-bottom: 4px;">✍️ Buku Tamu & Lembar Coretan Meja Siswa</h3>
                                 <p style="font-size: 12px; color: #333;">Tinggalkan jejak, doa, kesan, atau coretan
@@ -1753,9 +1753,9 @@
                 </div>
 
                 <!-- Status Bar -->
-                <div class="win-statusbar" id="yearbook-statusbar">
+                <div class="win-statusbar" id="kdn-statusbar">
                     <span class="statusbar-field win-inset" style="flex: 2;">Dokumen: BukuTahunan.doc (Siap)</span>
-                    <span class="statusbar-field win-inset" id="yearbook-status-students">32 Siswa Terdata</span>
+                    <span class="statusbar-field win-inset" id="kdn-status-students">32 Siswa Terdata</span>
                     <span class="statusbar-field win-inset">Halaman 1 / 1</span>
                 </div>
             </section>
@@ -3561,7 +3561,7 @@
                 </svg>
                 <span>Winamp Player</span>
             </a>
-            <a href="#yearbook-window" class="start-menu-link">
+            <a href="#kdn-window" class="start-menu-link">
                 <svg viewBox="0 0 16 16" fill="none">
                     <rect width="16" height="16" fill="#ffffff" stroke="#000" />
                     <rect x="2" y="3" width="12" height="2" fill="#000080" />
@@ -3714,7 +3714,7 @@
             <button class="taskbar-tab" data-target="winamp-window" style="display: none;">
                 <span>📻 Winamp</span>
             </button>
-            <button class="taskbar-tab" data-target="yearbook-window" style="display: none;">
+            <button class="taskbar-tab" data-target="kdn-window" style="display: none;">
                 <span>📄 BukuTahunan.doc</span>
             </button>
             <button class="taskbar-tab" data-target="exam-window" style="display: none;">
