@@ -15,7 +15,7 @@
 
 </div>
 
-Portal kelas XII-E bergaya desktop Windows 95 dan arkade Tekken 5. Murni HTML, CSS, dan JavaScript. Tanpa framework, tanpa build step, tanpa npm install.
+Portal kelas XII-E bergaya desktop Windows 95 dan arkade Tekken 5. HTML, CSS, dan JavaScript saja. Tidak ada framework, tidak ada build tool.
 
 ## Yang ada di sini
 

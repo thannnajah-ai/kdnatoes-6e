@@ -371,6 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let winStartTop = 0;
 
     function startDrag(win, clientX, clientY) {
+        if (window.innerWidth <= 768) return; // Non-aktifkan dragging di mobile agar jendela tetap rapi
         if (win.classList.contains('is-maximized')) return;
         activeDragWin = win;
         activateWindow(win.id);
