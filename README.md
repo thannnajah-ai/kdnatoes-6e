@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🪟 XII - E / KDNATOES
+# XII-E / KDNATOES
 ### *Retro Windows 95 Desktop OS & Tekken 5 Arcade Digital Yearbook*
 
 [![GitHub repo size](https://img.shields.io/github/repo-size/thannnajah-ai/kdnatoes-6e?style=for-the-badge&color=008080)](https://github.com/thannnajah-ai/kdnatoes-6e)
@@ -9,169 +9,108 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 [![Aesthetic](https://img.shields.io/badge/Style-Windows%2095%20Bevel-000080?style=for-the-badge&logo=windows95)](style.css)
 
-[**Live Demo**](https://kdnatoes-6e.vercel.app) • [**Fitur**](#-fitur-utama) • [**Cara Menjalankan**](#-cara-menjalankan) • [**Shortcut Keyboard**](#%EF%B8%8F-keyboard-shortcuts) • [**Dokumentasi**](docs/DESIGN.md)
+[**Live Demo**](https://kdnatoes-6e.vercel.app) • [**Fitur**](#yang-ada-di-sini) • [**Cara Menjalankan**](#cara-jalankan) • [**Dokumentasi**](docs/DESIGN.md)
 
 ---
 
 </div>
 
-## 📖 Tentang Proyek
+Portal kelas XII-E bergaya desktop Windows 95 dan arkade Tekken 5. Murni HTML, CSS, dan JavaScript. Tanpa framework, tanpa build step, tanpa npm install.
 
-**KDNATOES (Kelas XII-E)** adalah portal kelas yang dirancang dengan estetika retro **Windows 95/98** dikombinasikan dengan sentuhan arkade **Tekken 5**.
+## Yang ada di sini
 
-Dibangun secara murni menggunakan **Vanilla Web Technologies** (Zero Dependency / No Framework) dengan arsitektur UI *Authentic 3D Bevel Chiaroscuro*, simulasi sistem operasi desktop yang fully-interactive, kanvas MS Paint fungsional, dan sound engine retro berbasis Web Audio API.
+**Desktop OS simulasi**
+Jendela bisa digeser, di-resize, di-minimize ke taskbar, di-maximize. Ada start menu, taskbar dengan jam, dan cursor pixel kustom. Ikon digambar manual pakai SVG.
 
----
+**MS Paint**
+Kanvas dengan tool pencil, brush, eraser, paint bucket, spray, dan teks. Ada palet warna ala Win95 (plus pilihan ukuran brush), dan ekspor ke PNG.
 
-## 🎮 Fitur Utama
+**Personalia kelas ala Tekken 5**
+Kartu siswa dengan flip depan/belakang (foto + nama di depan, biodata + quote di belakang). Roster bergaya arcade fighter dengan stat bar. Bisa dicari.
 
-### 1. 🪟 Desktop OS Windows 95 Simulation
-- **Window Management**: Jendela dapat di-drag, resize, minimize ke taskbar, maximize, dan ditutup.
-- **Start Menu Klasik**: Akses cepat ke program, jadwal, personalia, pengaturan suara, dan shutdown dialog.
-- **Taskbar & Tray Clock**: Statusbar real-time dengan jam digital, indikator audio, dan daftar program aktif.
-- **Custom Retro Cursors & Icons**: Ikon pixel art dengan render crisp dan bayangan bevel 3D.
+**Recycle Bin & arsip rahasia**
+Galeri momen tersembunyi yang terkunci. Cara membukanya ada di `script.js` — cari kode rahasianya.
 
-### 2. 🎨 MS Paint Interaktif (Full Functionality)
-- **Canvas Tools**: Pencil, Brush, Eraser, Paint Bucket (Flood Fill), Line, Rectangle, Ellipse, Spray/Airbrush, dan Text Tool.
-- **28-Color Retro Palette**: Palet warna otentik Windows 95 dengan status warna primer & sekunder.
-- **Fitur Lanjutan**: Multi-layer support, Undo/Redo history, Brush size selector, dan ekspor langsung ke format `.png`.
+**Jadwal & tugas**
+Jadwal pelajaran per hari dan to-do list. Tambah, centang, hapus. Tersimpan di localStorage, jadi nggak hilang saat refresh.
 
-### 3. 🥊 Roster Personalia Kelas (Tekken 5 Mode)
-- **Kartu Siswa 3D Flip**: Tampilan depan foto & nama, bagian belakang biodata & quote kenangan.
-- **Tekken 5 Arcade Fighter UI**: Stat bar pertarungan, profil karakter, dan tampilan roster bernuansa arcade game 90-an.
-- **Pencarian & Filter**: Filter siswa berdasarkan nama, minat, atau peran dalam kelas.
+**Sound retro**
+Semua suara (startup, klik, error, disk drive) disintesis langsung lewat Web Audio API. Nol file audio eksternal. Ada toggle mute dan volume.
 
-### 4. 🗑️ Recycle Bin & Arsip Rahasia (Easter Egg)
-- Galeri foto dan momen-momen "aib"/kenangan tersembunyi yang terkunci.
-- **Unlock via Konami Code**: Tekan `↑ ↑ ↓ ↓ ← → ← → B A` di keyboard untuk membuka arsip rahasia!
+**Ekstra**
+Winamp 2.x player klasik, kalkulator, guestbook.
 
-### 5. 📅 Jadwal Pelajaran & Manajemen Tugas
-- **Kalender Mingguan**: Jadwal pelajaran interaktif per hari.
-- **To-Do Task List**: Tambah, centang selesai, dan hapus tugas kelas dengan persistensi otomatis di `localStorage`.
+## Tech stack
 
-### 6. 🔊 Web Audio API Retro Soundboard
-- Sintesis audio retro tanpa aset audio eksternal berat (startup chimes, error beeps, click sounds, disk drive chatter).
-- Toggle Mute / Volume slider di taskbar tray.
+| Layer | Teknologi |
+| :--- | :--- |
+| Markup | HTML5 semantic + ARIA |
+| Styling | CSS3, custom properties, grid, animasi |
+| Logic | Vanilla JS (ES6+), Canvas 2D, Web Audio API |
+| Data | localStorage |
+| Aset | Pixel art, script Python konversi foto |
+| PWA | `manifest.json` (installable, tanpa service worker) |
 
-### 7. 📱 PWA & Offline Support
-- Dukungan instalasi sebagai aplikasi mandiri di PC (Chrome/Edge) dan Android/iOS.
-- Offline-ready via Service Worker caching.
+## Struktur repo
 
----
-
-## 🛠️ Stack Teknologi
-
-| Layer | Teknologi | Keterangan |
-| :--- | :--- | :--- |
-| **Markup** | HTML5 Semantic | Struktur desktop OS, ARIA accessibility, window modals |
-| **Styling** | CSS3 (Pure Vanilla) | 5,000+ baris CSS, 3D Bevel tokens, CSS Grid, custom properties |
-| **Logic** | JavaScript (ES6+) | 8,500+ baris Vanilla JS, zero dependencies, Web Audio API, Canvas 2D |
-| **Aset** | Pixel Art & Python | Script konversi otomatis `convert_photos.py` untuk pixel art styling |
-| **PWA** | Web Manifest & Service Worker | Installable desktop/mobile app & offline cache |
-
-> ⚡ **Zero Dependencies:** Tidak memerlukan `npm install`, `vite`, `webpack`, ataupun framework berat. Cukup browser modern!
-
----
-
-## 📁 Struktur Repositori
-
-```bash
+```
 kdnatoes-6e/
-├── 📄 index.html          # Entry point aplikasi & struktur Windows 95
-├── 🎨 style.css           # Design tokens, Windows 95 bevels & Tekken UI
-├── ⚡ script.js           # Window manager, MS Paint canvas, audio, task logic
-├── 📱 manifest.json       # Konfigurasi Progressive Web App (PWA)
-├── 📂 assets/
-│   ├── personalia/        # Foto & potret retro anggota kelas
-│   ├── archive/           # Arsip foto rahasia Recycle Bin
-│   └── bliss_1080p.jpg    # Wallpaper desktop legendaris
-├── 📂 scripts/
-│   └── convert_photos.py  # Utilitas konversi foto ke palet pixel art
-└── 📂 docs/
-    ├── PRD.md             # Product Requirements Document
-    ├── DESIGN.md          # Spesifikasi lengkap Design Tokens & Bevels
-    └── ARCHITECTURE.md    # Detail arsitektur modul sistem
+├── index.html          # Struktur halaman utama
+├── style.css           # Design tokens, bevel, UI Tekken
+├── script.js           # Window manager, paint, audio, tugas, personalia
+├── manifest.json       # PWA manifest
+├── assets/
+│   ├── personalia/     # Foto anggota kelas
+│   ├── archive/        # Arsip rahasia Recycle Bin
+│   └── bliss_1080p.jpg # Wallpaper desktop
+├── scripts/
+│   └── convert_photos.py
+└── docs/
+    ├── PRD.md
+    ├── DESIGN.md
+    └── ARCHITECTURE.md
 ```
 
----
+## Cara menjalankan
 
-## 🚀 Cara Menjalankan
+Langsung buka `index.html` di browser (Windows: dobel klik; Mac: `open index.html`; Linux: `xdg-open index.html`).
 
-### 1. Langsung via Browser (Offline / Static)
-Buka file `index.html` langsung di browser favoritmu:
-- **Windows**: Dobel klik `index.html` atau jalankan `start index.html` di PowerShell.
-- **Mac**: `open index.html`
-- **Linux**: `xdg-open index.html`
-
-### 2. Menggunakan Local Web Server (Disarankan untuk PWA)
-Jika ingin menguji fitur PWA dan Service Worker:
+Untuk menjalankan lewat server lokal:
 
 ```bash
-# Opsi A: Python 3
 python -m http.server 8000
-
-# Opsi B: Node.js (npx)
+# atau
 npx serve .
-
-# Opsi C: PHP
+# atau
 php -S localhost:8000
 ```
-Buka browser di: `http://localhost:8000`
 
-### 3. Deploy ke Vercel / GitHub Pages
+Lalu buka `http://localhost:8000`.
 
-#### Deploy ke Vercel
-```bash
-npx vercel
-```
-Atau hubungkan repo ini langsung di dashboard [Vercel](https://vercel.com) untuk *continuous deployment* otomatis setiap `git push`.
+Deploy ke Vercel: `npx vercel`, atau hubungkan repo di dashboard Vercel. GitHub Pages: Settings > Pages > pilih branch `main`, folder `/ (root)`.
 
-#### Deploy ke GitHub Pages
-1. Masuk ke tab **Settings** di repositori GitHub kamu.
-2. Buka menu **Pages** di sebelah kiri.
-3. Pada bagian **Build and deployment > Source**, pilih branch `main` dan folder `/ (root)`.
-4. Klik **Save**, dan website akan live dalam beberapa menit.
-
----
-
-## ⌨️ Keyboard Shortcuts
-
-| Tombol / Kombinasi | Aksi |
-| :--- | :--- |
-| `Win` / `Ctrl + Esc` | Buka / Tutup Start Menu |
-| `Alt + Tab` | Visual Window Switcher |
-| `F11` | Masuk / Keluar Fullscreen Mode |
-| `↑ ↑ ↓ ↓ ← → ← → B A` | **Konami Code** (Membuka arsip rahasia Recycle Bin) |
-| `Esc` | Menutup dialog aktif / pop-up menu |
-
----
-
-## 🎨 Cuplikan Design Tokens (Windows 95 Classic)
+## Design tokens (Win95)
 
 ```css
 :root {
-  --win-desktop: #008080;          /* Classic Teal Desktop */
-  --win-gray: #c0c0c0;             /* Base Window Grey */
-  --win-title-active-start: #000080;/* Navy Blue Titlebar */
-  --win-title-active-end: #1084d0;  /* Gradient Accent */
-  --win-bevel-light: #ffffff;      /* 3D Highlight Border */
-  --win-bevel-shadow: #808080;     /* 3D Shadow Border */
+  --win-desktop: #008080;          /* teal khas desktop Win95 */
+  --win-gray: #c0c0c0;             /* abu-abu jendela */
+  --win-title-active-start: #000080;
+  --win-title-active-end: #1084d0;
+  --win-bevel-light: #ffffff;      /* highlight 3D */
+  --win-bevel-shadow: #808080;     /* shadow 3D */
   --font-pixel: 'Pixelify Sans', 'VT323', monospace;
 }
 ```
 
----
+Selengkapnya di `style.css` dan `docs/DESIGN.md`.
 
-## 👥 Kontributor & Kredit
+## Lisensi
 
-- **Kelas XII - E / KDNATOES** — Konsep, konten, foto, dan kenangan.
-- **Fonts**: [Pixelify Sans](https://fonts.google.com/specimen/Pixelify+Sans) & [VT323](https://fonts.google.com/specimen/VT323) dari Google Fonts (SIL Open Font License).
-- **Inspirasi Visual**: Microsoft Windows 95 / 98 & Namco Tekken 5 Arcade.
+MIT.
 
----
+## Kredit
 
-<div align="center">
-
-Dibuat dengan ❤️ dan nostalgia untuk keluarga besar **XII - E (KDNATOES)**.
-
-</div>
+- Kelas XII-E / KDNATOES — konsep, konten, foto
+- Font: Pixelify Sans & VT323 (Google Fonts, SIL OFL)
+- Inspirasi visual: Windows 95/98 dan Tekken 5

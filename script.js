@@ -4170,7 +4170,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Guestbook Storage & Management
-    const GB_STORAGE_KEY = 'kdnatoes_guestbook_entries_v3';
+    const GB_STORAGE_KEY = 'kdnatoes_guestbook_entries_v4';
     const defaultGuestbookEntries = [
         {
             id: 'gb_01',
@@ -4212,29 +4212,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getGuestbookEntries() {
         try {
+            // Bersihkan data sampah/dummy lama dari versi terdahulu
+            try {
+                localStorage.removeItem('kdnatoes_guestbook_entries_v1');
+                localStorage.removeItem('kdnatoes_guestbook_entries_v2');
+                localStorage.removeItem('kdnatoes_guestbook_entries_v3');
+            } catch (err) { }
+
             let raw = localStorage.getItem(GB_STORAGE_KEY);
-            // Fallback migrasi dari key v2 jika ada
-            if (!raw) {
-                const oldRaw = localStorage.getItem('kdnatoes_guestbook_entries_v2');
-                if (oldRaw) raw = oldRaw;
-            }
             if (!raw) {
                 localStorage.setItem(GB_STORAGE_KEY, JSON.stringify(defaultGuestbookEntries));
                 return defaultGuestbookEntries;
             }
             let entries = JSON.parse(raw) || defaultGuestbookEntries;
-            // Sinkronisasi otomatis data lama di browser user agar nama personalia selalu update
+            
+            // Hapus pesan percobaan/dummy seperti 'test'
+            entries = entries.filter(item => item && item.author && item.author.trim().toLowerCase() !== 'test');
+
+            // Sinkronisasi otomatis data jika ada nama lama yang terbawa
             let modified = false;
             entries = entries.map(item => {
-                if (item.author === 'M. Iqbal Khoirul Anam' || item.author === 'Iqbal Kecil') {
+                if (item.author.includes('Khoirul Anam') || item.author.includes('Iqbal Kecil') || item.author === 'M. Iqbal') {
                     item.author = 'Iqbal Qodama Khoirurrijal';
                     modified = true;
                 }
-                if (item.author === 'M. Anas Dingin' || item.author === 'Anas Dingin') {
+                if (item.author.includes('Anas Dingin') || item.author === 'M. Anas Dingin') {
                     item.author = 'M. Anas Afif Alfadil';
                     modified = true;
                 }
-                if (item.author === 'Nathan R.') {
+                if (item.author === 'Nathan R.' || item.author === 'Nathan') {
                     item.author = 'Nathan Ferdwiansyah Wicaksono';
                     modified = true;
                 }
@@ -4244,7 +4250,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 return item;
             });
-            if (modified || !localStorage.getItem(GB_STORAGE_KEY)) {
+            if (modified || entries.length === 0) {
+                if (entries.length === 0) entries = defaultGuestbookEntries;
                 localStorage.setItem(GB_STORAGE_KEY, JSON.stringify(entries));
             }
             return entries;
