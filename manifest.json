@@ -1,0 +1,18 @@
+{
+  "name": "Kelas XII-E Windows 95 Edition",
+  "short_name": "XII-E Win95",
+  "description": "Website Resmi & Album Digital Personalia Kelas XII-E dengan Nuansa Retro Windows 95 dan Tekken 5 Arcade.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#008080",
+  "theme_color": "#000080",
+  "icons": [
+    {
+      "src": "assets/personalia/iqbal_pixel_player.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
