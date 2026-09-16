@@ -17,7 +17,7 @@
 
 ## 📖 Tentang Proyek
 
-**KDNATOES (Kelas XII-E)** adalah website buku tahunan (yearbook) interaktif dan portal kelas yang dirancang dengan estetika retro **Windows 95/98** dikombinasikan dengan sentuhan arkade **Tekken 5**.
+**KDNATOES (Kelas XII-E)** adalah portal kelas yang dirancang dengan estetika retro **Windows 95/98** dikombinasikan dengan sentuhan arkade **Tekken 5**.
 
 Dibangun secara murni menggunakan **Vanilla Web Technologies** (Zero Dependency / No Framework) dengan arsitektur UI *Authentic 3D Bevel Chiaroscuro*, simulasi sistem operasi desktop yang fully-interactive, kanvas MS Paint fungsional, dan sound engine retro berbasis Web Audio API.
 
