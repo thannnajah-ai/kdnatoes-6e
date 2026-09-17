@@ -18,7 +18,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="XII-E Win95">
-    <link rel="stylesheet" href="style.css?v=3.1">
+    <link rel="stylesheet" href="style.css?v=3.2">
 </head>
 
 <body>
@@ -197,7 +197,7 @@
             </a>
 
             <!-- Internet Explorer 5.0 -->
-            <a href="#ie-window" class="desktop-icon" id="icon-ie" title="Buka Internet Explorer 5.0 (https://kdnatoes.sch.id)">
+            <a href="#ie-window" class="desktop-icon" id="icon-ie" title="Buka Internet Explorer (Mesin Pencari Web 1995)">
                 <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="16" cy="16" r="12" fill="#0984e3" stroke="#000" stroke-width="1.5" />
                     <path d="M11 16c0-3.5 2-6 6-6 4 0 5.5 2.5 5.5 4H11c0 3 2.5 4.5 5.5 4.5 2 0 3.5-.8 4-2" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" />
@@ -2315,14 +2315,14 @@
             </section>
 
             <!-- ============================================================
-                 WINDOW 12: INTERNET EXPLORER 5.0 (Retro Web 1.0 & Class Wiki)
+                 WINDOW 12: EXPLORER.EXE / INTERNET EXPLORER (Web Search Engine 1995)
                  ============================================================ -->
             <section class="win-window win-outset ie-window" id="ie-window" aria-labelledby="ie-title"
                 style="display: none;">
                 <div class="win-titlebar ie-titlebar">
                     <div class="win-title-left">
                         <span class="ie-title-icon">🌐</span>
-                        <span id="ie-title">Microsoft Internet Explorer - [https://kdnatoes.sch.id]</span>
+                        <span id="ie-title">Microsoft Internet Explorer - Yahoo! Search</span>
                     </div>
                     <div class="win-title-buttons">
                         <button class="win-btn-ctrl win-outset" aria-label="Minimize">_</button>
@@ -2333,74 +2333,60 @@
 
                 <!-- Browser Menubar -->
                 <div class="win-menubar">
-                    <button class="win-menu-item"><u>F</u>ile</button>
-                    <button class="win-menu-item"><u>E</u>dit</button>
-                    <button class="win-menu-item"><u>V</u>iew</button>
-                    <button class="win-menu-item">Fa<u>v</u>orites</button>
-                    <button class="win-menu-item"><u>T</u>ools</button>
-                    <button class="win-menu-item"><u>H</u>elp</button>
+                    <button class="win-menu-item" id="ie-menu-file"><u>F</u>ile</button>
+                    <button class="win-menu-item" id="ie-menu-edit"><u>E</u>dit</button>
+                    <button class="win-menu-item" id="ie-menu-view"><u>V</u>iew</button>
+                    <button class="win-menu-item" id="ie-menu-fav">Fa<u>v</u>orites</button>
+                    <button class="win-menu-item" id="ie-menu-tools"><u>T</u>ools</button>
+                    <button class="win-menu-item" id="ie-menu-help"><u>H</u>elp</button>
                 </div>
 
                 <!-- Browser Toolbar -->
                 <div class="ie-toolbar-bar win-outset">
-                    <button class="win-btn ie-nav-btn" id="ie-btn-back" title="Back">⬅️ Back</button>
-                    <button class="win-btn ie-nav-btn" id="ie-btn-forward" title="Forward">➡️ Forward</button>
+                    <button class="win-btn ie-nav-btn" id="ie-btn-back" title="Back (Alt+Left)" disabled>⬅️ Back</button>
+                    <button class="win-btn ie-nav-btn" id="ie-btn-forward" title="Forward (Alt+Right)" disabled>➡️ Forward</button>
                     <button class="win-btn ie-nav-btn" id="ie-btn-stop" title="Stop">🛑 Stop</button>
                     <button class="win-btn ie-nav-btn" id="ie-btn-refresh" title="Refresh">🔄 Refresh</button>
-                    <button class="win-btn ie-nav-btn" id="ie-btn-home" title="Home">🏠 Home</button>
+                    <button class="win-btn ie-nav-btn" id="ie-btn-home" title="Home (Yahoo! 1995)">🏠 Home</button>
                     <div class="ie-toolbar-sep"></div>
-                    <button class="win-btn ie-nav-btn" id="ie-btn-search" title="Search">🔍 Search</button>
-                    <button class="win-btn ie-nav-btn" id="ie-btn-favorites" title="Favorites">⭐ Favorites</button>
-                    <div class="ie-logo-spinning" id="ie-spinner" title="Windows Internet">e</div>
+                    <button class="win-btn ie-nav-btn" id="ie-btn-search" title="Focus Search">🔍 Search</button>
+                    <button class="win-btn ie-nav-btn" id="ie-btn-favorites" title="Favorites">⭐ Favorites ▾</button>
+                    <div class="ie-logo-spinning" id="ie-spinner" title="Windows Internet Explorer">e</div>
+                </div>
+
+                <!-- Dropdown Menu Favorites -->
+                <div class="ie-favorites-dropdown win-outset" id="ie-favorites-dropdown" style="display: none;">
+                    <div class="ie-fav-item" data-action="url" data-url="http://www.yahoo.com/">🌐 Yahoo! (1995 Web Directory)</div>
+                    <div class="ie-fav-item" data-action="url" data-url="http://www.altavista.digital.com/">⚡ AltaVista Search (1995)</div>
+                    <div class="ie-fav-item" data-action="url" data-url="http://www.google.com/">🔍 Google! Beta (1998)</div>
+                    <div class="ie-fav-item" data-action="url" data-url="http://www.lycos.com/">🐕 Lycos: Catalog of the Web</div>
+                    <div class="ie-fav-item" data-action="url" data-url="http://www.webcrawler.com/">🕸️ WebCrawler (1994)</div>
+                    <div class="ie-fav-sep"></div>
+                    <div class="ie-fav-item" data-action="engine" data-engine="find">📁 Windows 95 File Finder (Local)</div>
                 </div>
 
                 <!-- Address Bar -->
                 <div class="ie-address-row">
                     <span class="ie-address-label"><u>A</u>ddress:</span>
                     <div class="ie-address-input-wrapper win-inset">
-                        <span class="ie-address-proto-icon">🔒</span>
-                        <input type="text" class="ie-address-input" id="ie-url-input" value="https://kdnatoes.sch.id" spellcheck="false" />
+                        <span class="ie-address-proto-icon" id="ie-proto-icon">🌐</span>
+                        <input type="text" class="ie-address-input" id="ie-url-input" value="http://www.yahoo.com/" placeholder="Ketik URL web atau kata kunci pencarian..." spellcheck="false" autocomplete="off" />
                     </div>
-                    <button class="win-btn" id="ie-btn-go" style="padding: 2px 10px; font-weight: bold;">Go</button>
-                    <div class="ie-links-label">Links:</div>
+                    <button class="win-btn" id="ie-btn-go" style="padding: 2px 12px; font-weight: bold;">Go</button>
+                    <div class="ie-links-label">Engines:</div>
                     <div class="ie-quick-links">
-                        <button class="ie-quick-link-btn is-active" data-tab="home">Beranda</button>
-                        <button class="ie-quick-link-btn" data-tab="wiki">Wiki &amp; Mitos</button>
-                        <button class="ie-quick-link-btn" data-tab="quotes">Kutipan Guru</button>
-                        <button class="ie-quick-link-btn" data-tab="guestbook">Buku Tamu</button>
+                        <button class="ie-quick-link-btn is-active" data-engine="yahoo" title="Yahoo! 1995 Directory &amp; Search">🌐 Yahoo! 95</button>
+                        <button class="ie-quick-link-btn" data-engine="altavista" title="AltaVista Web Index 1995">⚡ AltaVista</button>
+                        <button class="ie-quick-link-btn" data-engine="google" title="Google! Beta 1998">🔍 Google 98</button>
+                        <button class="ie-quick-link-btn" data-engine="lycos" title="Lycos Web Search 1995">🐕 Lycos</button>
+                        <button class="ie-quick-link-btn" data-engine="find" title="Windows 95 Local File Finder">📁 Win95 Find</button>
                     </div>
                 </div>
 
-                <!-- Web 1.0 Page Content Chassis -->
+                <!-- Web Page Content Chassis -->
                 <div class="ie-page-chassis win-inset" id="ie-viewport">
-                    <!-- Web Page Top Banner -->
-                    <div class="web1-header">
-                        <div class="web1-marquee-box">
-                            <marquee behavior="scroll" direction="left" scrollamount="4">
-                                ★★★ SELAMAT DATANG DI HOMEPAGE RESMI KELAS XII-E (KDNATOES) • ANGKATAN 2025 • BEST VIEWED AT 800x600 ★★★
-                            </marquee>
-                        </div>
-                        <div class="web1-badge-strip">
-                            <span class="web1-badge">🚧 UNDER CONSTRUCTION 🚧</span>
-                            <span class="web1-badge">Netscape 4.0 &amp; IE 5.0 Compatible</span>
-                            <span class="web1-badge">⭐ Top 5% Web Award 1999 ⭐</span>
-                        </div>
-                    </div>
-
-                    <!-- Web 1.0 Tab Content Container -->
                     <div class="web1-content-box" id="ie-content-area">
                         <!-- Content dynamically rendered by script.js -->
-                    </div>
-
-                    <!-- Web 1.0 Footer -->
-                    <div class="web1-footer">
-                        <div class="web1-counter-box">
-                            <span>Anda adalah pengunjung ke:</span>
-                            <div class="odometer win-inset" id="ie-visitor-odometer">004289</div>
-                        </div>
-                        <div class="web1-copyright">
-                            &copy; 2025 KDNATOES XII-E WebRing. Dibuat dengan cinta, mi instan, dan nostalgia 90-an.
-                        </div>
                     </div>
                 </div>
 
@@ -3609,7 +3595,7 @@
                     <circle cx="8" cy="8" r="6" fill="#0984e3" />
                     <path d="M5 8c0-1.5 1-3 3-3s2.5 1 2.5 2H5c0 1.5 1 2 2.5 2" stroke="#fff" stroke-width="1.2" fill="none" />
                 </svg>
-                <span>Internet Explorer</span>
+                <span>Internet Explorer (Web Search)</span>
             </a>
             <a href="#solitaire-window" class="start-menu-link">
                 <svg viewBox="0 0 16 16" fill="none">
@@ -3867,7 +3853,7 @@
     </div>
 
     <!-- Script Logic -->
-    <script src="script.js?v=3.1"></script>
+    <script src="script.js?v=3.2"></script>
 </body>
 
 </html>

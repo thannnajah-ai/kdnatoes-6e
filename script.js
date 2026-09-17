@@ -6470,216 +6470,1143 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
     }
 
     // ======================================================================
-    // 15. Internet Explorer 5.0 & Retro Web 1.0 Homepage Engine
+    // 15. Internet Explorer 5.0 & Authentic Windows 95 Search Engine
     // ======================================================================
     function initRetroBrowser() {
         const ieContentArea = document.getElementById('ie-content-area');
-        const ieQuickLinkBtns = document.querySelectorAll('.ie-quick-link-btn');
+        const ieTitle = document.getElementById('ie-title');
+        const ieUrlInput = document.getElementById('ie-url-input');
         const ieBtnGo = document.getElementById('ie-btn-go');
-        const ieBtnHome = document.getElementById('ie-btn-home');
+        const ieBtnBack = document.getElementById('ie-btn-back');
+        const ieBtnForward = document.getElementById('ie-btn-forward');
+        const ieBtnStop = document.getElementById('ie-btn-stop');
         const ieBtnRefresh = document.getElementById('ie-btn-refresh');
+        const ieBtnHome = document.getElementById('ie-btn-home');
+        const ieBtnSearch = document.getElementById('ie-btn-search');
+        const ieBtnFavorites = document.getElementById('ie-btn-favorites');
+        const ieFavoritesDropdown = document.getElementById('ie-favorites-dropdown');
+        const ieQuickLinkBtns = document.querySelectorAll('.ie-quick-link-btn');
         const ieStatusText = document.getElementById('ie-status-text');
         const ieSpinner = document.getElementById('ie-spinner');
-        const ieOdometer = document.getElementById('ie-visitor-odometer');
+        const ieMenuFav = document.getElementById('ie-menu-fav');
 
         if (!ieContentArea) return;
 
-        let activeTab = 'home';
+        let activeEngine = 'yahoo';
+        let historyStack = [];
+        let historyIndex = -1;
+        let searchAbortCtrl = null;
 
-        // Increment visitor counter in localStorage
-        try {
-            let visitors = parseInt(localStorage.getItem('kdnatoes_visitors') || '4289', 10);
-            visitors += 1;
-            localStorage.setItem('kdnatoes_visitors', visitors.toString());
-            if (ieOdometer) {
-                ieOdometer.textContent = String(visitors).padStart(6, '0');
-            }
-        } catch (e) { }
+        // Local OS searchable file database for Windows 95 File Finder
+        const OS_FILES = [
+            { name: 'Paint.exe', folder: 'C:\\Program Files\\Accessories', size: '48 KB', type: 'Application', winId: 'paint-window', icon: '🎨' },
+            { name: 'Solitaire.exe', folder: 'C:\\Windows', size: '32 KB', type: 'Application', winId: 'solitaire-window', icon: '🃏' },
+            { name: 'MS-DOS.exe', folder: 'C:\\Windows\\System', size: '64 KB', type: 'MS-DOS Application', winId: 'dos-window', icon: '📟' },
+            { name: 'mIRC.exe', folder: 'C:\\Program Files\\mIRC', size: '52 KB', type: 'Application', winId: 'mirc-window', icon: '💬' },
+            { name: 'Calc.exe', folder: 'C:\\Program Files\\Accessories', size: '24 KB', type: 'Application', winId: 'calc-window', icon: '🧮' },
+            { name: 'Winamp.exe', folder: 'C:\\Program Files\\Winamp', size: '98 KB', type: 'Application', winId: 'winamp-window', icon: '⚡' },
+            { name: 'PhotoBooth.exe', folder: 'C:\\Windows\\Media', size: '45 KB', type: 'Application', winId: 'photobooth-window', icon: '📷' },
+            { name: 'Recycle Bin', folder: 'C:\\Recycled', size: '0 KB', type: 'System Folder', winId: 'recycle-window', icon: '🗑️' },
+            { name: 'Jadwal.txt', folder: 'C:\\Documents\\Sekolah', size: '12 KB', type: 'Text Document', winId: 'jadwal-window', icon: '📅' },
+            { name: 'Tugas.doc', folder: 'C:\\Documents\\Sekolah', size: '18 KB', type: 'WordPad Document', winId: 'tugas-window', icon: '📝' },
+            { name: 'Personalia.dat', folder: 'C:\\KDN\\Data', size: '120 KB', type: 'Data File', winId: 'kdn-window', icon: '👥' },
+            { name: 'Ujian.exe', folder: 'C:\\Programs\\Simulasi', size: '35 KB', type: 'Application', winId: 'exam-window', icon: '🎓' },
+            { name: 'Kampus.doc', folder: 'C:\\Documents\\PTN', size: '28 KB', type: 'WordPad Document', winId: 'campus-window', icon: '🏛️' },
+            { name: 'Telkom.exe', folder: 'C:\\Windows\\DialUp', size: '30 KB', type: 'Dial-Up Connection', winId: 'telkom-window', icon: '☎️' },
+            { name: 'Mading.txt', folder: 'C:\\Documents\\Sekolah', size: '8 KB', type: 'Text Document', winId: 'mading-window', icon: '📌' },
+            { name: 'Friendster.html', folder: 'C:\\Internet\\WebPages', size: '15 KB', type: 'HTML Document', winId: 'friendster-window', icon: '🌐' },
+            { name: 'Themes.cpl', folder: 'C:\\Windows\\System', size: '16 KB', type: 'Control Panel Applet', winId: 'themes-window', icon: '🎨' }
+        ];
 
-        const pages = {
-            home: `
-                <div class="web1-card">
-                    <h3>🏛️ Sambutan Hangat Keluarga Besar XII-E (KDNATOES)</h3>
-                    <p>Selamat datang di situs resmi kelas XII-E Angkatan 2025! Website ini dibangun sebagai wadah silaturahmi, arsip kenangan, dan pusat informasi terpadu seluruh siswa.</p>
-                    <p><strong>Motto Kelas:</strong> <em>"Bersatu dalam tawa, berjuang menggapai cita, selamanya KDNATOES!"</em></p>
-                </div>
-                <div class="web1-card" style="background: #fff8e7;">
-                    <h3>📊 Sekilas Statistik Kelas</h3>
-                    <ul>
-                        <li><strong>Jumlah Siswa:</strong> 36 Calon Orang Sukses &amp; Pemimpin Masa Depan</li>
-                        <li><strong>Wali Kelas:</strong> Ibu Siti Aminah, M.Pd. (Paling sabar sedunia!)</li>
-                        <li><strong>Ketua Kelas:</strong> Rian Pratama &amp; Wakil: Siti Rahma</li>
-                        <li><strong>Target Kelulusan:</strong> 100% Lulus &amp; Tembus Kampus Impian PTN 2025</li>
-                    </ul>
-                </div>
-                <div class="web1-card">
-                    <h3>📢 Pengumuman Terkini</h3>
-                    <p>📌 Pengambilan jas buku tahunan dijadwalkan hari Jumat setelah salat Jumat di ruang multimedia.</p>
-                    <p>📌 Jangan lupa kumpulkan tugas mandiri dan cek simulasi kuis di <code>Ujian.exe</code>!</p>
-                </div>`,
-
-            wiki: `
-                <div class="web1-card">
-                    <h3>📚 Encyclopedia KDNATOES: Mitos &amp; Fakta Kelas XII-E</h3>
-                    <p>Berikut adalah catatan mitos dan fakta melegenda yang hanya dimengerti oleh penghuni kelas XII-E:</p>
-                </div>
-                <div class="web1-card">
-                    <h3>👻 1. Mitos Bangku Baris 3 Pojok Kiri</h3>
-                    <p>Konon siapapun yang duduk di bangku ini akan otomatis terserang rasa kantuk mistis saat jam pelajaran Matematika atau Sejarah, tetapi anehnya selalu luput dari tunjuk guru!</p>
-                </div>
-                <div class="web1-card">
-                    <h3>🚁 2. Legenda Kipas Angin Sayap Tiga</h3>
-                    <p>Kipas angin gantung nomor 2 suaranya menyerupai helikopter tempur Apache yang siap lepas landas, tapi hembusan anginnya tetap lembut sepoi-sepoi.</p>
-                </div>
-                <div class="web1-card">
-                    <h3>👑 3. Filosofi Nama "KDNATOES"</h3>
-                    <p>Akronim kebersamaan yang diciptakan saat masa LDKS. Menyimbolkan kekompakan 36 kepala berbeda watak yang disatukan menjadi satu keluarga besar.</p>
-                </div>`,
-
-            quotes: `
-                <div class="web1-card">
-                    <h3>💬 Galeri Kutipan &amp; Quote Ikonik Kelas</h3>
-                    <p>Kumpulan kata mutiara dari guru tercinta dan teman sekelas yang tak terlupakan:</p>
-                </div>
-                <div class="web1-card" style="border-left: 4px solid #000080;">
-                    <p><em>"Ujian nasional atau SNBT itu cuma jembatan kecil anak-anak. Yang terpenting adalah kejujuran dan daya juang kalian!"</em></p>
-                    <strong>— Ibu Siti (Wali Kelas)</strong>
-                </div>
-                <div class="web1-card" style="border-left: 4px solid #e74c3c;">
-                    <p><em>"Siapa piket hari ini tolong spidolnya diisi ulang, jangan tunggu gurunya datang baru kalang kabut!"</em></p>
-                    <strong>— Rian (Ketua Kelas)</strong>
-                </div>
-                <div class="web1-card" style="border-left: 4px solid #27ae60;">
-                    <p><em>"Pinjam tipe-x dong sekejap, nanti pasti kubalikin... (kata-kata paling sering berujung lenyap)."</em></p>
-                    <strong>— Suara Anonim Meja Belakang</strong>
-                </div>
-                <div class="web1-card" style="border-left: 4px solid #f39c12;">
-                    <p><em>"Bel istirahat adalah musik terindah sepanjang 3 tahun masa SMA."</em></p>
-                    <strong>— Dimas (Pecinta Kantin)</strong>
-                </div>`,
-
-            guestbook: `
-                <div class="web1-card">
-                    <h3>✍️ Buku Tamu Web 1.0 (Guestbook Online)</h3>
-                    <p>Tinggalkan jejak, pesan semangat, atau sapaan nostalgia untuk teman-teman XII-E:</p>
-                    <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
-                        <input type="text" id="ie-gb-name" class="win-inset" placeholder="Nama Anda / Samaran..." style="padding: 4px; font-size: 12px;" />
-                        <textarea id="ie-gb-msg" class="win-inset" rows="3" placeholder="Tuliskan pesan / kenangan Anda..." style="padding: 4px; font-size: 12px; resize: vertical;"></textarea>
-                        <button class="win-btn" id="ie-gb-submit" style="align-self: flex-start; padding: 4px 12px; font-weight: bold; background: #2980b9; color: #fff;">
-                            📝 Kirim Buku Tamu
-                        </button>
-                    </div>
-                </div>
-                <div class="web1-card" id="ie-gb-list">
-                    <h3>📬 Pesan Masuk Terbaru</h3>
-                    <div id="ie-gb-entries">
-                        <!-- Populated dynamically -->
-                    </div>
-                </div>`
+        // Built-in curated retro 90s archive for instant offline search results
+        const RETRO_TOPICS = {
+            'windows 95': [
+                {
+                    title: 'Microsoft Windows 95 Official Release - Chicago Architecture',
+                    url: 'http://www.microsoft.com/windows95/default.htm',
+                    snippet: 'Welcome to the revolutionary 32-bit operating system featuring the iconic Start button, pre-emptive multitasking, Plug and Play hardware detection, and native FAT32 file system support.'
+                },
+                {
+                    title: 'The Making of Windows 95: From Project Chicago to Global Phenomenon',
+                    url: 'http://www.geocities.com/SiliconValley/Way/1995/win95_story.html',
+                    snippet: 'On August 24, 1995, Microsoft launched Windows 95 with The Rolling Stones anthem "Start Me Up". Over 1 million copies sold in the first 4 days alone.'
+                },
+                {
+                    title: 'Windows 95 Tips, Tweaks, and Secret Easter Eggs',
+                    url: 'http://www.computerhope.com/tips/win95.htm',
+                    snippet: 'Discover the hidden developer credits window, optimize your swap file size, configure autoexec.bat and config.sys, and master keyboard shortcuts.'
+                }
+            ],
+            'netscape': [
+                {
+                    title: 'Netscape Navigator 4.0 Communicator - The World Standard Web Browser',
+                    url: 'http://home.netscape.com/eng/mozilla/4.0/',
+                    snippet: 'Experience the web with Netscape Navigator. Support for JavaScript 1.2, Dynamic HTML, Cascading Style Sheets, SSL 3.0 encryption, and integrated Netscape Composer.'
+                },
+                {
+                    title: 'The Browser Wars: Netscape vs. Microsoft Internet Explorer',
+                    url: 'http://www.webhistory.org/browser_wars.html',
+                    snippet: 'How Marc Andreessen and Jim Clark founded Netscape Communications Corp in Mountain View, sparking the commercial expansion of the World Wide Web.'
+                }
+            ],
+            'doom': [
+                {
+                    title: 'id Software DOOM: The Ultimate 3D First-Person Sci-Fi Shooter',
+                    url: 'http://www.idsoftware.com/games/doom/',
+                    snippet: 'Battle demonic forces on Phobos and Deimos! Created by John Carmack and John Romero. Features groundbreaking BSP 3D rendering engine and custom WAD modding.'
+                },
+                {
+                    title: 'DOOM Shareware Episode 1: Knee-Deep in the Dead',
+                    url: 'http://www.classicdoom.com/shareware.htm',
+                    snippet: 'Download DOOM1_9.ZIP shareware floppy disk archive. Requires 386SX CPU, 4MB RAM, and Sound Blaster compatible audio card.'
+                }
+            ],
+            'tekken': [
+                {
+                    title: 'Tekken: The King of Iron Fist Tournament (Namco System 11)',
+                    url: 'http://www.namco.co.jp/arcade/tekken/',
+                    snippet: 'Namco\'s premier 3D arcade fighting game! Master martial arts with Jin Kazama, Kazuya, Paul Phoenix, Nina Williams, and King in blistering 60 FPS combat.'
+                },
+                {
+                    title: 'Tekken Martial Arts Roster & Combo Move Guide',
+                    url: 'http://www.fightersnet.com/tekken/moves.htm',
+                    snippet: 'Comprehensive frame data, 10-hit combo guides, counter-attacks, and stage strategies for competitive arcade and home console brawlers.'
+                }
+            ],
+            'playstation': [
+                {
+                    title: 'Sony PlayStation (PS1) - 32-Bit CD-ROM Game Console',
+                    url: 'http://www.playstation.com/hardware/scph1000/',
+                    snippet: 'Sony enters gaming! Featuring custom MIPS R3000A 33.8 MHz RISC processor, 360,000 polygons per second, CD-quality audio, and legendary titles like Final Fantasy VII.'
+                }
+            ],
+            'mp3': [
+                {
+                    title: 'Nullsoft Winamp: It Really Whips the Llama\'s Ass!',
+                    url: 'http://www.winamp.com/download/',
+                    snippet: 'The definitive MP3 audio player for Windows. Built by Justin Frankel, featuring 10-band graphic equalizer, playlist manager, and endless customizable retro skins.'
+                },
+                {
+                    title: 'Fraunhofer IIS: MPEG-1 Audio Layer III (MP3) Specification',
+                    url: 'http://www.iis.fraunhofer.de/amm/techinfo/layer3/',
+                    snippet: 'Psychoacoustic audio compression reducing CD digital audio bitrates by 12:1 while retaining near-transparent sound fidelity.'
+                }
+            ],
+            'geocities': [
+                {
+                    title: 'GeoCities: Free 2MB Web Homestead on the Internet',
+                    url: 'http://www.geocities.com/',
+                    snippet: 'Join over 1,000,000 homesteader neighborhoods: SiliconValley for tech, SunsetStrip for music, Area51 for sci-fi. Includes free hit counters and guestbooks!'
+                }
+            ],
+            'dial up': [
+                {
+                    title: 'TelkomNet Instan 080989999: Koneksi Internet Tanpa Ribet',
+                    url: 'http://www.telkom.co.id/telkomnet_instan.htm',
+                    snippet: 'Akses internet instan dengan tarif Rp 150/menit langsung masuk ke tagihan telepon rumah. Mendukung modem 33.6k dan 56k V.90.'
+                },
+                {
+                    title: 'USRobotics Sportster 56k Faxmodem & AT Command Reference',
+                    url: 'http://www.usr.com/support/sportster56k/',
+                    snippet: 'Understanding modem negotiation squawks, carrier detect tones, and init strings like ATZ and ATDT to achieve stable dial-up throughput.'
+                }
+            ],
+            'komputer': [
+                {
+                    title: 'Sejarah Evolusi Komputer Pribadi (PC) Era 1990-an',
+                    url: 'http://www.w3.org/history/personal_computers.html',
+                    snippet: 'Perkembangan arsitektur Intel x86 dari 486 DX2-66 hingga Pentium Pro, standarisasi PCI bus, CD-ROM 4x drive, dan revolusi grafis Super VGA 1024x768.'
+                }
+            ],
+            'indonesia': [
+                {
+                    title: 'Sejarah Perkembangan Internet di Indonesia (Paguyuban Network 1994)',
+                    url: 'http://id.wikipedia.org/wiki/Internet_di_Indonesia',
+                    snippet: 'Kisah awal jaringan TCP/IP di Indonesia yang dirintis oleh Onno W. Purbo dkk, jaringan akademis ITB, UI, LAPAN, hingga berdirinya APJII.'
+                }
+            ]
         };
 
-        function renderGuestbookEntries() {
-            const container = document.getElementById('ie-gb-entries');
-            if (!container) return;
-            let entries = [];
-            try {
-                entries = JSON.parse(localStorage.getItem('kdnatoes_guestbook') || '[]');
-            } catch (e) { }
+        function spinLogo(ms = 350) {
+            if (!ieSpinner) return;
+            ieSpinner.style.transform = 'rotate(360deg)';
+            setTimeout(() => {
+                if (ieSpinner) ieSpinner.style.transform = '';
+            }, ms);
+        }
 
-            if (entries.length === 0) {
-                entries = [
-                    { name: 'Nathan', msg: 'Website kelas ini keren banget vibes 90-annya! Jaya terus XII-E!', time: '16/09/2025 10:15' },
-                    { name: 'Sarah', msg: 'Sukses PTN buat kita semua ya guys! Jangan putus kontak setelah wisuda!', time: '15/09/2025 14:20' }
+        function setStatus(text) {
+            if (ieStatusText) ieStatusText.textContent = text;
+        }
+
+        function updateNavControls() {
+            if (ieBtnBack) ieBtnBack.disabled = historyIndex <= 0;
+            if (ieBtnForward) ieBtnForward.disabled = historyIndex >= historyStack.length - 1;
+
+            const currentState = historyStack[historyIndex];
+            if (currentState) {
+                if (ieUrlInput) ieUrlInput.value = currentState.url || '';
+                if (ieTitle) {
+                    ieTitle.textContent = currentState.title ? `Microsoft Internet Explorer - [${currentState.title}]` : 'Microsoft Internet Explorer';
+                }
+                const matchedEngine = currentState.engine || 'yahoo';
+                ieQuickLinkBtns.forEach(btn => {
+                    btn.classList.toggle('is-active', btn.dataset.engine === matchedEngine);
+                });
+            }
+        }
+
+        function navigateTo(state, replace = false) {
+            spinLogo();
+            try { playRetroClick(); } catch (e) { }
+
+            if (replace && historyIndex >= 0) {
+                historyStack[historyIndex] = state;
+            } else {
+                historyIndex++;
+                historyStack.splice(historyIndex);
+                historyStack.push(state);
+            }
+
+            updateNavControls();
+            setStatus(`Loading ${state.url}...`);
+
+            setTimeout(() => {
+                ieContentArea.innerHTML = state.html;
+                if (typeof state.onMount === 'function') {
+                    state.onMount();
+                }
+                setStatus('Done');
+            }, 80);
+        }
+
+        function goBack() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                const state = historyStack[historyIndex];
+                updateNavControls();
+                spinLogo();
+                try { playRetroClick(); } catch (e) { }
+                setStatus(`Loading ${state.url}...`);
+                setTimeout(() => {
+                    ieContentArea.innerHTML = state.html;
+                    if (typeof state.onMount === 'function') state.onMount();
+                    setStatus('Done');
+                }, 60);
+            }
+        }
+
+        function goForward() {
+            if (historyIndex < historyStack.length - 1) {
+                historyIndex++;
+                const state = historyStack[historyIndex];
+                updateNavControls();
+                spinLogo();
+                try { playRetroClick(); } catch (e) { }
+                setStatus(`Loading ${state.url}...`);
+                setTimeout(() => {
+                    ieContentArea.innerHTML = state.html;
+                    if (typeof state.onMount === 'function') state.onMount();
+                    setStatus('Done');
+                }, 60);
+            }
+        }
+
+        function refreshCurrent() {
+            if (historyIndex >= 0 && historyStack[historyIndex]) {
+                const state = historyStack[historyIndex];
+                spinLogo();
+                try { playRetroClick(); } catch (e) { }
+                setStatus(`Refreshing ${state.url}...`);
+                setTimeout(() => {
+                    ieContentArea.innerHTML = state.html;
+                    if (typeof state.onMount === 'function') state.onMount();
+                    setStatus('Done');
+                }, 80);
+            }
+        }
+
+        // ==============================================================
+        // PAGE GENERATOR: Yahoo! 1995
+        // ==============================================================
+        function getYahooHtml() {
+            return `
+                <div class="yahoo-wrapper">
+                    <div class="yahoo-logo-header">
+                        <span class="yahoo-logo" id="yahoo-main-logo">YAHOO!</span>
+                    </div>
+                    <div class="yahoo-tagline">
+                        "Guide to the World Wide Web - What's New • What's Cool • Random Link"
+                    </div>
+                    <div class="yahoo-top-links">
+                        <span class="yahoo-nav-quick" data-q="What is new on the Web">What's New!</span> •
+                        <span class="yahoo-nav-quick" data-q="Cool links and games">What's Cool!</span> •
+                        <span class="yahoo-nav-quick" data-q="Netscape Navigator">Web Tools</span> •
+                        <span class="yahoo-nav-quick" data-q="Windows 95">Windows 95</span> •
+                        <span class="yahoo-nav-quick" data-q="Doom and Quake 3D games">Retro Games</span>
+                    </div>
+
+                    <div class="yahoo-search-box">
+                        <form id="yahoo-search-form" onsubmit="return false;" style="margin: 0;">
+                            <input type="text" id="yahoo-input" class="yahoo-query-input" placeholder="Search the Web or Yahoo! Directory..." autocomplete="off" spellcheck="false" />
+                            <button type="submit" id="yahoo-submit-btn" class="win-btn yahoo-search-btn">Search</button>
+                            <button type="button" id="yahoo-clear-btn" class="win-btn yahoo-search-btn">Clear</button>
+                            <div class="yahoo-search-opts">
+                                <label><input type="radio" name="y-scope" value="web" checked /> Search Web</label>
+                                <label><input type="radio" name="y-scope" value="dir" /> Search Directory</label>
+                                <label><input type="checkbox" checked /> Exact Match</label>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="yahoo-categories-grid">
+                        <div class="yahoo-cat-card">
+                            <div class="yahoo-cat-title" data-cat="Arts and Humanities">🎨 Arts and Humanities</div>
+                            <div class="yahoo-cat-subs">
+                                <span class="yahoo-sub-link" data-q="Architecture">Architecture</span>,
+                                <span class="yahoo-sub-link" data-q="Photography">Photography</span>,
+                                <span class="yahoo-sub-link" data-q="Literature">Literature</span>
+                            </div>
+                        </div>
+
+                        <div class="yahoo-cat-card">
+                            <div class="yahoo-cat-title" data-cat="Business and Economy">💼 Business and Economy</div>
+                            <div class="yahoo-cat-subs">
+                                <span class="yahoo-sub-link" data-q="Stock Market">Markets</span>,
+                                <span class="yahoo-sub-link" data-q="Investments">Investments</span>,
+                                <span class="yahoo-sub-link" data-q="Classifieds">Classifieds</span>
+                            </div>
+                        </div>
+
+                        <div class="yahoo-cat-card">
+                            <div class="yahoo-cat-title" data-cat="Computers and Internet">💻 Computers and Internet</div>
+                            <div class="yahoo-cat-subs">
+                                <span class="yahoo-sub-link" data-q="Internet and WWW">Internet</span>,
+                                <span class="yahoo-sub-link" data-q="Software freeware">Software</span>,
+                                <span class="yahoo-sub-link" data-q="PC Games 1995">Games</span>,
+                                <span class="yahoo-sub-link" data-q="Hardware Pentium">Hardware</span>
+                            </div>
+                        </div>
+
+                        <div class="yahoo-cat-card">
+                            <div class="yahoo-cat-title" data-cat="Education">🎓 Education</div>
+                            <div class="yahoo-cat-subs">
+                                <span class="yahoo-sub-link" data-q="Universities">Universities</span>,
+                                <span class="yahoo-sub-link" data-q="K-12 schools">K-12</span>,
+                                <span class="yahoo-sub-link" data-q="Online Libraries">Libraries</span>
+                            </div>
+                        </div>
+
+                        <div class="yahoo-cat-card">
+                            <div class="yahoo-cat-title" data-cat="Entertainment">🎬 Entertainment</div>
+                            <div class="yahoo-cat-subs">
+                                <span class="yahoo-sub-link" data-q="Movies and Cinema">Movies</span>,
+                                <span class="yahoo-sub-link" data-q="Music rock pop">Music</span>,
+                                <span class="yahoo-sub-link" data-q="Television TV">TV</span>,
+                                <span class="yahoo-sub-link" data-q="Humor jokes">Humor</span>
+                            </div>
+                        </div>
+
+                        <div class="yahoo-cat-card">
+                            <div class="yahoo-cat-title" data-cat="Government">🏛️ Government &amp; Law</div>
+                            <div class="yahoo-cat-subs">
+                                <span class="yahoo-sub-link" data-q="World Politics">Politics</span>,
+                                <span class="yahoo-sub-link" data-q="Agencies">Agencies</span>,
+                                <span class="yahoo-sub-link" data-q="Law and Legal">Law</span>
+                            </div>
+                        </div>
+
+                        <div class="yahoo-cat-card">
+                            <div class="yahoo-cat-title" data-cat="Health and Medicine">🏥 Health &amp; Medicine</div>
+                            <div class="yahoo-cat-subs">
+                                <span class="yahoo-sub-link" data-q="Medicine diseases">Medicine</span>,
+                                <span class="yahoo-sub-link" data-q="Fitness health">Fitness</span>,
+                                <span class="yahoo-sub-link" data-q="Pharmacology">Drugs</span>
+                            </div>
+                        </div>
+
+                        <div class="yahoo-cat-card">
+                            <div class="yahoo-cat-title" data-cat="News and Media">📰 News and Media</div>
+                            <div class="yahoo-cat-subs">
+                                <span class="yahoo-sub-link" data-q="Current World News">World News</span>,
+                                <span class="yahoo-sub-link" data-q="Daily Newspapers">Newspapers</span>,
+                                <span class="yahoo-sub-link" data-q="Weather forecast">Weather</span>
+                            </div>
+                        </div>
+
+                        <div class="yahoo-cat-card">
+                            <div class="yahoo-cat-title" data-cat="Recreation and Sports">⚽ Recreation &amp; Sports</div>
+                            <div class="yahoo-cat-subs">
+                                <span class="yahoo-sub-link" data-q="World Cup football">Sports</span>,
+                                <span class="yahoo-sub-link" data-q="Hobbies crafts">Hobbies</span>,
+                                <span class="yahoo-sub-link" data-q="Automobiles car">Autos</span>,
+                                <span class="yahoo-sub-link" data-q="World Travel">Travel</span>
+                            </div>
+                        </div>
+
+                        <div class="yahoo-cat-card">
+                            <div class="yahoo-cat-title" data-cat="Science">🔬 Science</div>
+                            <div class="yahoo-cat-subs">
+                                <span class="yahoo-sub-link" data-q="Astronomy NASA">Astronomy</span>,
+                                <span class="yahoo-sub-link" data-q="Biology genetics">Biology</span>,
+                                <span class="yahoo-sub-link" data-q="Physics quantum">Physics</span>
+                            </div>
+                        </div>
+
+                        <div class="yahoo-cat-card">
+                            <div class="yahoo-cat-title" data-cat="Social Science">👥 Social Science</div>
+                            <div class="yahoo-cat-subs">
+                                <span class="yahoo-sub-link" data-q="World History">History</span>,
+                                <span class="yahoo-sub-link" data-q="Economics">Economics</span>,
+                                <span class="yahoo-sub-link" data-q="Archaeology">Archaeology</span>
+                            </div>
+                        </div>
+
+                        <div class="yahoo-cat-card">
+                            <div class="yahoo-cat-title" data-cat="Society and Culture">🌐 Society &amp; Culture</div>
+                            <div class="yahoo-cat-subs">
+                                <span class="yahoo-sub-link" data-q="World cultures">People</span>,
+                                <span class="yahoo-sub-link" data-q="Environment ecology">Environment</span>,
+                                <span class="yahoo-sub-link" data-q="Philosophy religion">Philosophy</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="yahoo-footer">
+                        Copyright &copy; 1995 Yahoo! Inc. All rights reserved. • Best viewed with Microsoft Internet Explorer 4.0 or Netscape Navigator at 800x600 resolution.
+                    </div>
+                </div>`;
+        }
+
+        function mountYahoo() {
+            const form = document.getElementById('yahoo-search-form');
+            const input = document.getElementById('yahoo-input');
+            const btnClear = document.getElementById('yahoo-clear-btn');
+
+            if (form && input) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const q = input.value.trim();
+                    if (q) executeSearch(q, 'yahoo');
+                });
+                setTimeout(() => { if (input) input.focus(); }, 50);
+            }
+
+            if (btnClear && input) {
+                btnClear.addEventListener('click', () => {
+                    input.value = '';
+                    input.focus();
+                });
+            }
+
+            document.querySelectorAll('.yahoo-cat-title, .yahoo-sub-link, .yahoo-nav-quick').forEach(el => {
+                el.addEventListener('click', () => {
+                    const q = el.dataset.q || el.dataset.cat || el.textContent;
+                    if (q) executeSearch(q, 'yahoo');
+                });
+            });
+        }
+
+        // ==============================================================
+        // PAGE GENERATOR: AltaVista 1995
+        // ==============================================================
+        function getAltaVistaHtml() {
+            return `
+                <div class="altavista-wrapper">
+                    <div class="altavista-header">
+                        <div>
+                            <div class="altavista-logo">ALTAVISTA</div>
+                            <div class="altavista-tagline">The Search Company • Digital Equipment Corporation</div>
+                        </div>
+                        <div style="font-size: 11px; text-align: right; color: #555;">
+                            Over 30,000,000 Web pages indexed<br>
+                            Simulated DEC Alpha 64-bit Server
+                        </div>
+                    </div>
+
+                    <div class="altavista-search-panel win-outset">
+                        <form id="altavista-search-form" onsubmit="return false;">
+                            <div style="font-weight: bold; margin-bottom: 6px; font-size: 13px;">
+                                Search the Web and Display the Results in Standard Form
+                            </div>
+                            <div style="display: flex; gap: 6px; margin-bottom: 8px;">
+                                <input type="text" id="altavista-input" class="win-inset" style="flex: 1; padding: 4px; font-size: 14px; font-family: monospace;" placeholder="Enter keywords (e.g. windows 95, doom, netscape)..." />
+                                <button type="submit" class="win-btn" style="padding: 4px 16px; font-weight: bold;">Submit</button>
+                            </div>
+                            <div style="font-size: 11px; color: #444;">
+                                💡 Tip: Boolean operators (AND, OR, NOT, NEAR) are supported. Use quotation marks for exact phrases.
+                            </div>
+                        </form>
+                    </div>
+
+                    <div style="font-size: 12px; line-height: 1.6; margin-top: 14px;">
+                        <h4 style="margin: 0 0 6px 0; color: #000080;">Featured AltaVista Web Channels:</h4>
+                        <ul>
+                            <li><a href="#" class="av-quick-search" data-q="Computer Hardware Systems">Hardware &amp; Microprocessors</a> - Alpha, Pentium Pro, PowerPC</li>
+                            <li><a href="#" class="av-quick-search" data-q="World Wide Web Standards">W3C Web Standards</a> - HTML 3.2, HTTP/1.1 Protocol</li>
+                            <li><a href="#" class="av-quick-search" data-q="Computer Security Cryptography">Cryptography &amp; Security</a> - SSL, RSA, PGP Encryption</li>
+                            <li><a href="#" class="av-quick-search" data-q="Video Game Development 3D">3D Game Development</a> - OpenGL, Direct3D, id Software</li>
+                        </ul>
+                    </div>
+                </div>`;
+        }
+
+        function mountAltaVista() {
+            const form = document.getElementById('altavista-search-form');
+            const input = document.getElementById('altavista-input');
+            if (form && input) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const q = input.value.trim();
+                    if (q) executeSearch(q, 'altavista');
+                });
+                setTimeout(() => { if (input) input.focus(); }, 50);
+            }
+            document.querySelectorAll('.av-quick-search').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    executeSearch(el.dataset.q, 'altavista');
+                });
+            });
+        }
+
+        // ==============================================================
+        // PAGE GENERATOR: Google! Beta 1998
+        // ==============================================================
+        function getGoogleHtml() {
+            return `
+                <div class="google-wrapper">
+                    <div class="google-retro-logo">
+                        <span class="google-g1">G</span><span class="google-o1">o</span><span class="google-o2">o</span><span class="google-g2">g</span><span class="google-l">l</span><span class="google-e">e</span><span class="google-ex">!</span>
+                    </div>
+                    <div style="font-size: 12px; color: #555; margin-bottom: 12px;">
+                        Beta Version • Stanford University PageRank Search
+                    </div>
+
+                    <div class="google-card win-outset">
+                        <form id="google-search-form" onsubmit="return false;">
+                            <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px;">
+                                Search the web using Google!
+                            </div>
+                            <input type="text" id="google-input" class="win-inset" style="width: 90%; padding: 4px; font-size: 14px; font-family: monospace; margin-bottom: 10px;" placeholder="Search 25 million pages..." />
+                            <div style="display: flex; gap: 8px; justify-content: center;">
+                                <button type="submit" id="google-btn-search" class="win-btn" style="padding: 4px 14px; font-weight: bold;">Google Search</button>
+                                <button type="button" id="google-btn-lucky" class="win-btn" style="padding: 4px 14px;">I'm feeling lucky</button>
+                            </div>
+                            <div style="margin-top: 10px; font-size: 11px; color: #555;">
+                                10 results • Special Searches: <a href="#" class="g-quick" data-q="Stanford University computer science">Stanford Search</a> • <a href="#" class="g-quick" data-q="Linux Kernel Torvalds">Linux Search</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div style="margin-top: 20px; font-size: 11px; color: #777;">
+                        Copyright &copy; 1998 Google Inc. • Larry Page &amp; Sergey Brin
+                    </div>
+                </div>`;
+        }
+
+        function mountGoogle() {
+            const form = document.getElementById('google-search-form');
+            const input = document.getElementById('google-input');
+            const luckyBtn = document.getElementById('google-btn-lucky');
+
+            if (form && input) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const q = input.value.trim();
+                    if (q) executeSearch(q, 'google');
+                });
+                setTimeout(() => { if (input) input.focus(); }, 50);
+            }
+
+            if (luckyBtn && input) {
+                luckyBtn.addEventListener('click', () => {
+                    const q = input.value.trim() || 'Windows 95';
+                    executeSearch(q, 'google', true);
+                });
+            }
+
+            document.querySelectorAll('.g-quick').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    executeSearch(el.dataset.q, 'google');
+                });
+            });
+        }
+
+        // ==============================================================
+        // PAGE GENERATOR: Lycos 1995
+        // ==============================================================
+        function getLycosHtml() {
+            return `
+                <div class="lycos-wrapper">
+                    <div style="margin-top: 8px;">
+                        <span class="lycos-logo">LYCOS</span>
+                    </div>
+                    <div style="font-size: 13px; font-style: italic; color: #222; margin: 6px 0 12px 0;">
+                        The Catalog of the Web • Search 91% of the World Wide Web!
+                    </div>
+
+                    <div class="win-outset" style="background: #fdfae7; padding: 12px; max-width: 480px; margin: 0 auto 16px auto; border: 1px solid #c0c0c0;">
+                        <form id="lycos-search-form" onsubmit="return false;">
+                            <div style="margin-bottom: 8px;">
+                                <input type="text" id="lycos-input" class="win-inset" style="width: 80%; padding: 4px; font-size: 14px; font-family: monospace;" placeholder="What are you looking for?" />
+                            </div>
+                            <button type="submit" class="win-btn" style="padding: 4px 18px; font-weight: bold; background: #ffd700; color: #000;">
+                                🐕 Go Get It!
+                            </button>
+                        </form>
+                    </div>
+
+                    <div style="font-size: 12px; text-align: left; max-width: 500px; margin: 0 auto;">
+                        <strong>Popular Lycos Web Categories:</strong>
+                        <ul style="margin-top: 6px; line-height: 1.5;">
+                            <li><a href="#" class="lycos-quick" data-q="Electronic Mail and Internet Software">Internet Tools &amp; Web Servers</a></li>
+                            <li><a href="#" class="lycos-quick" data-q="Popular 90s Music Bands">Rock, Grunge &amp; Electronic Music</a></li>
+                            <li><a href="#" class="lycos-quick" data-q="Computer Games Freeware">Shareware &amp; Freeware Library</a></li>
+                        </ul>
+                    </div>
+                </div>`;
+        }
+
+        function mountLycos() {
+            const form = document.getElementById('lycos-search-form');
+            const input = document.getElementById('lycos-input');
+            if (form && input) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const q = input.value.trim();
+                    if (q) executeSearch(q, 'lycos');
+                });
+                setTimeout(() => { if (input) input.focus(); }, 50);
+            }
+            document.querySelectorAll('.lycos-quick').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    executeSearch(el.dataset.q, 'lycos');
+                });
+            });
+        }
+
+        // ==============================================================
+        // PAGE GENERATOR: Windows 95 File Finder (find://c/)
+        // ==============================================================
+        function getWin95FindHtml(searchQuery = '', matchedFiles = null) {
+            const files = matchedFiles !== null ? matchedFiles : OS_FILES;
+
+            const rowsHtml = files.length > 0 ? files.map(f => `
+                <tr class="find-file-row" data-winid="${f.winId}" title="Double-click to open ${f.name}">
+                    <td>${f.icon} <strong>${f.name}</strong></td>
+                    <td>${f.folder}</td>
+                    <td>${f.size}</td>
+                    <td>${f.type}</td>
+                </tr>
+            `).join('') : `
+                <tr>
+                    <td colspan="4" style="text-align: center; color: #888; padding: 14px;">
+                        No files or folders found matching the specified criteria.
+                    </td>
+                </tr>
+            `;
+
+            return `
+                <div class="win95-find-wrapper">
+                    <div class="win95-find-tabs">
+                        <button class="win95-find-tab is-active" id="tab-name-loc">Name &amp; Location</button>
+                        <button class="win95-find-tab" id="tab-date">Date Modified</button>
+                        <button class="win95-find-tab" id="tab-advanced">Advanced</button>
+                    </div>
+
+                    <div class="win95-find-pane">
+                        <form id="win95-find-form" onsubmit="return false;">
+                            <div class="win95-find-row">
+                                <span class="win95-find-label"><u>N</u>amed:</span>
+                                <input type="text" id="find-name-input" class="win-inset win95-find-input" value="${searchQuery}" placeholder="Type filename (e.g. paint, *.exe, doc, txt)..." />
+                            </div>
+                            <div class="win95-find-row">
+                                <span class="win95-find-label"><u>L</u>ook in:</span>
+                                <select class="win-inset win95-find-input" style="height: 22px;">
+                                    <option>C:\\ (Local hard drive)</option>
+                                    <option>C:\\Windows</option>
+                                    <option>C:\\Program Files</option>
+                                    <option>C:\\Documents</option>
+                                </select>
+                            </div>
+                            <div class="win95-find-row" style="margin-left: 98px;">
+                                <label><input type="checkbox" checked /> Include subfolders</label>
+                            </div>
+
+                            <div class="win95-find-actions">
+                                <button type="submit" id="btn-find-now" class="win-btn" style="padding: 3px 14px; font-weight: bold;">Find Now</button>
+                                <button type="button" id="btn-find-reset" class="win-btn" style="padding: 3px 12px;">New Search</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div style="font-size: 11px; color: #333; margin-bottom: 4px; display: flex; justify-content: space-between;">
+                        <span>Found ${files.length} file(s) on Drive C:</span>
+                        <span style="color: #666;">Double-click any item to open</span>
+                    </div>
+
+                    <div class="win-inset" style="max-height: 180px; overflow-y: auto; background: #fff;">
+                        <table class="win95-find-results-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>In Folder</th>
+                                    <th>Size</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+        }
+
+        function mountWin95Find(currentQuery = '') {
+            const form = document.getElementById('win95-find-form');
+            const input = document.getElementById('find-name-input');
+            const btnReset = document.getElementById('btn-find-reset');
+
+            if (form && input) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const q = input.value.trim().toLowerCase();
+                    let filtered = OS_FILES;
+                    if (q && q !== '*') {
+                        filtered = OS_FILES.filter(f =>
+                            f.name.toLowerCase().includes(q) ||
+                            f.folder.toLowerCase().includes(q) ||
+                            f.type.toLowerCase().includes(q)
+                        );
+                    }
+                    spinLogo(200);
+                    navigateTo({
+                        url: q ? `find://c/?q=${encodeURIComponent(q)}` : 'find://c/',
+                        title: 'Find: Files or Folders',
+                        engine: 'find',
+                        html: getWin95FindHtml(q, filtered),
+                        onMount: () => mountWin95Find(q)
+                    });
+                });
+                setTimeout(() => { if (input) input.focus(); }, 50);
+            }
+
+            if (btnReset && input) {
+                btnReset.addEventListener('click', () => {
+                    input.value = '';
+                    navigateTo({
+                        url: 'find://c/',
+                        title: 'Find: Files or Folders',
+                        engine: 'find',
+                        html: getWin95FindHtml('', OS_FILES),
+                        onMount: () => mountWin95Find('')
+                    });
+                });
+            }
+
+            // Click or double-click to launch program / open window
+            document.querySelectorAll('.find-file-row').forEach(row => {
+                const launch = () => {
+                    const winId = row.dataset.winid;
+                    if (winId && typeof activateWindow === 'function') {
+                        activateWindow(winId);
+                        try { playRetroClick(); } catch (e) { }
+                    }
+                };
+                row.addEventListener('dblclick', launch);
+                row.addEventListener('click', (e) => {
+                    // Click selects row, if clicked again launches
+                    document.querySelectorAll('.find-file-row').forEach(r => r.style.background = '');
+                    row.style.background = '#000080';
+                    row.style.color = '#ffffff';
+                });
+            });
+        }
+
+        // ==============================================================
+        // SEARCH ENGINE EXECUTION ENGINE
+        // ==============================================================
+        async function executeSearch(query, engine = activeEngine, feelingLucky = false) {
+            if (!query || !query.trim()) return;
+            const q = query.trim();
+
+            if (searchAbortCtrl) {
+                try { searchAbortCtrl.abort(); } catch (e) { }
+            }
+            searchAbortCtrl = new AbortController();
+
+            spinLogo(600);
+            setStatus(`Searching ${engine.toUpperCase()} for "${q}"...`);
+
+            // 1. Check local retro topic matches
+            const qLower = q.toLowerCase();
+            let results = [];
+
+            for (const [key, items] of Object.entries(RETRO_TOPICS)) {
+                if (qLower.includes(key) || key.includes(qLower)) {
+                    results.push(...items);
+                }
+            }
+
+            // 2. Fetch live Wikipedia OpenSearch as real-time web results (CORS-friendly public API)
+            try {
+                const isId = /[a-z]/i.test(q) && (qLower.includes('dan') || qLower.includes('di') || qLower.includes('ke') || qLower.includes('sejarah') || qLower.includes('indonesia'));
+                const wikiDomain = isId ? 'id.wikipedia.org' : 'en.wikipedia.org';
+                const apiUrl = `https://${wikiDomain}/w/api.php?action=opensearch&search=${encodeURIComponent(q)}&limit=8&namespace=0&format=json&origin=*`;
+
+                const res = await fetch(apiUrl, { signal: searchAbortCtrl.signal });
+                if (res.ok) {
+                    const data = await res.json();
+                    const titles = data[1] || [];
+                    const snippets = data[2] || [];
+                    const urls = data[3] || [];
+
+                    for (let i = 0; i < titles.length; i++) {
+                        if (titles[i] && (snippets[i] || urls[i])) {
+                            results.push({
+                                title: titles[i],
+                                snippet: snippets[i] || `Detailed archive entry and hyperlinked documentation regarding ${titles[i]}.`,
+                                url: urls[i] || `http://${wikiDomain}/wiki/${encodeURIComponent(titles[i])}`
+                            });
+                        }
+                    }
+                }
+            } catch (err) {
+                // Ignore abort / network errors; fallback gracefully
+            }
+
+            // 3. Fallback synthesis if no results found
+            if (results.length === 0) {
+                results = [
+                    {
+                        title: `${q} - World Wide Web Resource & Directory Index`,
+                        url: `http://www.geocities.com/SiliconValley/Piazza/1995/${encodeURIComponent(q.replace(/\s+/g, '_').toLowerCase())}.html`,
+                        snippet: `Historical records, references, and vintage web links concerning "${q}". Compiled by the Cyber WebRing archive.`
+                    },
+                    {
+                        title: `Archive: Discussion and FAQ regarding ${q}`,
+                        url: `http://groups.google.com/group/comp.sys/${encodeURIComponent(q.toLowerCase())}`,
+                        snippet: `Usenet newsgroup threads and mailing list discussions detailing specifications, reviews, and user guides for ${q}.`
+                    },
+                    {
+                        title: `The 1990s Encyclopedia Entry: ${q}`,
+                        url: `http://www.encyclopedia.org/articles/${encodeURIComponent(q.toLowerCase())}.htm`,
+                        snippet: `General knowledge overview, historical timeline, and technological context of ${q} during the 20th century.`
+                    }
                 ];
             }
 
-            container.innerHTML = entries.map(e => `
-                <div style="border-bottom: 1px dashed #ccc; padding: 6px 0; font-size: 12px;">
-                    <strong>${e.name}</strong> <span style="color: #888; font-size: 10px;">(${e.time})</span><br>
-                    <span>${e.msg}</span>
-                </div>
-            `).join('');
-        }
-
-        function setTab(tab) {
-            activeTab = tab;
-            ieQuickLinkBtns.forEach(btn => {
-                if (btn.dataset.tab === tab) {
-                    btn.classList.add('is-active');
-                } else {
-                    btn.classList.remove('is-active');
-                }
-            });
-
-            if (ieSpinner) {
-                ieSpinner.style.transform = 'rotate(180deg)';
-                setTimeout(() => { if (ieSpinner) ieSpinner.style.transform = ''; }, 200);
+            // If "I'm feeling lucky" was pressed, jump straight to the first article
+            if (feelingLucky && results.length > 0) {
+                renderArticleView(results[0], q);
+                return;
             }
 
-            if (ieStatusText) ieStatusText.textContent = `Loading https://kdnatoes.sch.id/${tab}...`;
-            setTimeout(() => {
-                ieContentArea.innerHTML = pages[tab] || pages['home'];
-                if (ieStatusText) ieStatusText.textContent = 'Done';
-                if (tab === 'guestbook') {
-                    renderGuestbookEntries();
-                    const btnSub = document.getElementById('ie-gb-submit');
-                    if (btnSub) {
-                        btnSub.addEventListener('click', () => {
-                            const nameIn = document.getElementById('ie-gb-name');
-                            const msgIn = document.getElementById('ie-gb-msg');
-                            if (!nameIn || !msgIn) return;
-                            const name = nameIn.value.trim() || 'Alumni XII-E';
-                            const msg = msgIn.value.trim();
-                            if (!msg) return;
+            // Render SERP
+            const serpUrl = `http://www.${engine}.com/search?q=${encodeURIComponent(q)}`;
+            const engineLabel = engine === 'yahoo' ? 'Yahoo! Search'
+                : engine === 'altavista' ? 'AltaVista Web Index'
+                : engine === 'google' ? 'Google! Beta Search'
+                : 'Lycos Catalog';
 
-                            let entries = [];
-                            try {
-                                entries = JSON.parse(localStorage.getItem('kdnatoes_guestbook') || '[]');
-                            } catch (e) { }
-                            entries.unshift({
-                                name,
-                                msg,
-                                time: new Date().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })
-                            });
-                            try {
-                                localStorage.setItem('kdnatoes_guestbook', JSON.stringify(entries));
-                            } catch (e) { }
-                            msgIn.value = '';
-                            renderGuestbookEntries();
-                            playArcadeFanfare();
-                        });
+            const serpResultsHtml = results.map((r, idx) => `
+                <div class="serp-item">
+                    <div>
+                        <span class="serp-title" data-idx="${idx}">${escapeHtml(r.title)}</span>
+                    </div>
+                    <div class="serp-url">${escapeHtml(r.url)}</div>
+                    <div class="serp-snippet">${escapeHtml(r.snippet)}</div>
+                </div>
+            `).join('');
+
+            const serpHtml = `
+                <div class="serp-container">
+                    <div class="serp-header">
+                        <div>
+                            <span style="font-size: 16px; font-weight: bold; color: #000080;">${engineLabel}</span>
+                            <span style="font-size: 14px; color: #333;"> Results for: <strong>"${escapeHtml(q)}"</strong></span>
+                        </div>
+                        <button class="win-btn" id="serp-btn-new" style="padding: 2px 10px; font-size: 11px;">New Search</button>
+                    </div>
+                    <div class="serp-stats">
+                        Found ${results.length} matches (0.22 seconds - 28.8k baud simulated).
+                    </div>
+                    <div class="serp-list">
+                        ${serpResultsHtml}
+                    </div>
+                    <div style="margin-top: 18px; padding-top: 8px; border-top: 1px solid #808080; font-size: 11px; color: #666; text-align: center;">
+                        ${engineLabel} • Indexed by WebSpider 1.4 &copy; 1995-1998
+                    </div>
+                </div>`;
+
+            navigateTo({
+                url: serpUrl,
+                title: `${q} - ${engineLabel}`,
+                engine: engine,
+                html: serpHtml,
+                onMount: () => {
+                    const btnNew = document.getElementById('serp-btn-new');
+                    if (btnNew) {
+                        btnNew.addEventListener('click', () => loadEngine(engine));
                     }
+                    document.querySelectorAll('.serp-title').forEach(el => {
+                        el.addEventListener('click', () => {
+                            const idx = parseInt(el.dataset.idx, 10);
+                            if (results[idx]) {
+                                renderArticleView(results[idx], q);
+                            }
+                        });
+                    });
                 }
-            }, 120);
+            });
         }
 
+        // ==============================================================
+        // ARTICLE / PAGE READER VIEW
+        // ==============================================================
+        function renderArticleView(article, sourceQuery = '') {
+            const articleHtml = `
+                <div class="web1-article-view">
+                    <div class="web1-article-bar">
+                        <span><strong>Document:</strong> ${escapeHtml(article.url)}</span>
+                        <div style="display: flex; gap: 6px;">
+                            <button class="win-btn" id="art-btn-back" style="padding: 1px 8px; font-size: 11px;">⬅️ Back to Results</button>
+                            <a href="${escapeHtml(article.url)}" target="_blank" rel="noopener noreferrer" class="win-btn" style="padding: 1px 8px; font-size: 11px; text-decoration: none; color: #000;">
+                                🌐 Open Real Web Page ↗
+                            </a>
+                        </div>
+                    </div>
+
+                    <h1 class="web1-article-title">${escapeHtml(article.title)}</h1>
+                    <hr size="2" color="#000080" />
+
+                    <div style="margin: 14px 0; font-size: 14px; line-height: 1.6;">
+                        <p style="font-size: 15px;"><strong>Summary:</strong></p>
+                        <p style="background: #fdfae7; border-left: 4px solid #000080; padding: 10px 14px; margin-bottom: 16px;">
+                            ${escapeHtml(article.snippet)}
+                        </p>
+                        <p>
+                            This page was retrieved from the global World Wide Web archive and rendered inside Microsoft Internet Explorer 4.0 standard compliance mode.
+                        </p>
+                        <p>
+                            To explore the full external article on the active internet, click the <em>"Open Real Web Page ↗"</em> button above to launch the live URL directly in your browser.
+                        </p>
+                    </div>
+
+                    <hr size="1" color="#808080" style="margin-top: 24px;" />
+                    <div style="font-size: 11px; color: #555; display: flex; justify-content: space-between; flex-wrap: wrap;">
+                        <span>Host: ${escapeHtml(article.url.split('/')[2] || 'www.web.org')}</span>
+                        <span>HTTP/1.0 200 OK • Content-Type: text/html</span>
+                        <span>Security: 128-bit SSL</span>
+                    </div>
+                </div>`;
+
+            navigateTo({
+                url: article.url,
+                title: article.title,
+                engine: activeEngine,
+                html: articleHtml,
+                onMount: () => {
+                    const btnBack = document.getElementById('art-btn-back');
+                    if (btnBack) {
+                        btnBack.addEventListener('click', goBack);
+                    }
+                }
+            });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // ==============================================================
+        // ENGINE LOADER
+        // ==============================================================
+        function loadEngine(engine) {
+            activeEngine = engine;
+            if (engine === 'yahoo') {
+                navigateTo({
+                    url: 'http://www.yahoo.com/',
+                    title: 'Yahoo! Search',
+                    engine: 'yahoo',
+                    html: getYahooHtml(),
+                    onMount: mountYahoo
+                });
+            } else if (engine === 'altavista') {
+                navigateTo({
+                    url: 'http://www.altavista.digital.com/',
+                    title: 'AltaVista: The Search Company',
+                    engine: 'altavista',
+                    html: getAltaVistaHtml(),
+                    onMount: mountAltaVista
+                });
+            } else if (engine === 'google') {
+                navigateTo({
+                    url: 'http://www.google.com/',
+                    title: 'Google! Beta',
+                    engine: 'google',
+                    html: getGoogleHtml(),
+                    onMount: mountGoogle
+                });
+            } else if (engine === 'lycos') {
+                navigateTo({
+                    url: 'http://www.lycos.com/',
+                    title: 'Lycos: The Catalog of the Web',
+                    engine: 'lycos',
+                    html: getLycosHtml(),
+                    onMount: mountLycos
+                });
+            } else if (engine === 'find') {
+                navigateTo({
+                    url: 'find://c/',
+                    title: 'Find: Files or Folders',
+                    engine: 'find',
+                    html: getWin95FindHtml('', OS_FILES),
+                    onMount: () => mountWin95Find('')
+                });
+            }
+        }
+
+        // ==============================================================
+        // ADDRESS BAR NAVIGATION HANDLER
+        // ==============================================================
+        function handleAddressSubmit() {
+            if (!ieUrlInput) return;
+            const val = ieUrlInput.value.trim();
+            if (!val) return;
+
+            const lower = val.toLowerCase();
+            if (lower.includes('yahoo')) {
+                loadEngine('yahoo');
+            } else if (lower.includes('altavista')) {
+                loadEngine('altavista');
+            } else if (lower.includes('google')) {
+                loadEngine('google');
+            } else if (lower.includes('lycos')) {
+                loadEngine('lycos');
+            } else if (lower.startsWith('find://') || lower === 'find') {
+                loadEngine('find');
+            } else if (lower.startsWith('http://') || lower.startsWith('https://') || lower.includes('.com') || lower.includes('.org') || lower.includes('.net') || lower.includes('.id')) {
+                // If it looks like a URL, extract domain/query and search or preview
+                const cleanQuery = val.replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0];
+                executeSearch(cleanQuery, activeEngine);
+            } else {
+                // Any regular phrase treated as search query!
+                executeSearch(val, activeEngine);
+            }
+        }
+
+        // ==============================================================
+        // ATTACH DOM LISTENERS
+        // ==============================================================
+        if (ieBtnGo) {
+            ieBtnGo.addEventListener('click', () => {
+                handleAddressSubmit();
+                try { playRetroClick(); } catch (e) { }
+            });
+        }
+        if (ieUrlInput) {
+            ieUrlInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    handleAddressSubmit();
+                    try { playRetroClick(); } catch (e) { }
+                }
+            });
+        }
+
+        if (ieBtnBack) ieBtnBack.addEventListener('click', goBack);
+        if (ieBtnForward) ieBtnForward.addEventListener('click', goForward);
+        if (ieBtnRefresh) ieBtnRefresh.addEventListener('click', refreshCurrent);
+        if (ieBtnHome) ieBtnHome.addEventListener('click', () => loadEngine('yahoo'));
+        if (ieBtnStop) {
+            ieBtnStop.addEventListener('click', () => {
+                if (searchAbortCtrl) {
+                    try { searchAbortCtrl.abort(); } catch (e) { }
+                }
+                setStatus('Stopped');
+                try { playRetroClick(); } catch (e) { }
+            });
+        }
+        if (ieBtnSearch) {
+            ieBtnSearch.addEventListener('click', () => {
+                loadEngine(activeEngine);
+                try { playRetroClick(); } catch (e) { }
+            });
+        }
+
+        // Quick-link Engine Buttons
         ieQuickLinkBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                setTab(btn.dataset.tab);
-                playRetroClick();
+                const engine = btn.dataset.engine || 'yahoo';
+                loadEngine(engine);
+                try { playRetroClick(); } catch (e) { }
             });
         });
 
-        if (ieBtnGo) {
-            ieBtnGo.addEventListener('click', () => {
-                setTab(activeTab);
-                playRetroClick();
+        // Favorites Dropdown Toggle
+        function toggleFavorites(show) {
+            if (!ieFavoritesDropdown) return;
+            const willShow = show !== undefined ? show : ieFavoritesDropdown.style.display === 'none';
+            ieFavoritesDropdown.style.display = willShow ? 'block' : 'none';
+        }
+
+        if (ieBtnFavorites) {
+            ieBtnFavorites.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleFavorites();
+                try { playRetroClick(); } catch (e) { }
             });
         }
-        if (ieBtnHome) {
-            ieBtnHome.addEventListener('click', () => {
-                setTab('home');
-                playRetroClick();
-            });
-        }
-        if (ieBtnRefresh) {
-            ieBtnRefresh.addEventListener('click', () => {
-                setTab(activeTab);
-                playRetroClick();
+        if (ieMenuFav) {
+            ieMenuFav.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleFavorites();
+                try { playRetroClick(); } catch (e) { }
             });
         }
 
-        setTab('home');
+        document.addEventListener('click', (e) => {
+            if (ieFavoritesDropdown && ieFavoritesDropdown.style.display !== 'none') {
+                if (!e.target.closest('#ie-favorites-dropdown') && !e.target.closest('#ie-btn-favorites') && !e.target.closest('#ie-menu-fav')) {
+                    toggleFavorites(false);
+                }
+            }
+        });
+
+        // Favorites Items
+        document.querySelectorAll('.ie-fav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                toggleFavorites(false);
+                const action = item.dataset.action;
+                const engine = item.dataset.engine;
+                const url = item.dataset.url;
+
+                if (action === 'engine' && engine) {
+                    loadEngine(engine);
+                } else if (url) {
+                    if (url.includes('yahoo')) loadEngine('yahoo');
+                    else if (url.includes('altavista')) loadEngine('altavista');
+                    else if (url.includes('google')) loadEngine('google');
+                    else if (url.includes('lycos')) loadEngine('lycos');
+                    else if (url.includes('webcrawler')) executeSearch('WebCrawler Search', 'yahoo');
+                    else if (url.includes('wikipedia')) executeSearch('World Wide Web', 'google');
+                }
+                try { playRetroClick(); } catch (e) { }
+            });
+        });
+
+        // Initialize default view to Yahoo! (1995)
+        loadEngine('yahoo');
     }
 
     // ======================================================================

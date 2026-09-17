@@ -4356,81 +4356,408 @@ a, button, [role="button"], input, select, textarea {
     height: 400px;
     overflow-y: auto;
     background: #ffffff;
-    padding: 14px;
+    padding: 12px;
     font-family: "Times New Roman", Times, serif;
     color: #000000;
+    position: relative;
 }
-.web1-header {
-    border-bottom: 2px dashed #000080;
-    padding-bottom: 8px;
-    margin-bottom: 12px;
-}
-.web1-marquee-box {
-    background: #ffffcc;
-    border: 1px solid #ffcc00;
-    padding: 4px 8px;
-    color: #cc0000;
-    font-weight: bold;
-    font-family: sans-serif;
-    font-size: 12px;
-    margin-bottom: 8px;
-}
-.web1-badge-strip {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-}
-.web1-badge {
-    background: #333333;
-    color: #ffeb3b;
-    border: 1px solid #ffffff;
-    padding: 2px 6px;
-    font-size: 10px;
-    font-family: sans-serif;
-    font-weight: bold;
-}
-.web1-content-box {
-    font-size: 14px;
-    line-height: 1.5;
-}
-.web1-card {
-    background: #f7f9fa;
-    border: 1px solid #c0c0c0;
-    padding: 10px 12px;
-    margin-bottom: 12px;
-    box-shadow: 2px 2px 0 #dfdfdf;
-}
-.web1-card h3 {
-    margin: 0 0 6px 0;
-    color: #000080;
-    font-family: sans-serif;
-    font-size: 15px;
-}
-.web1-footer {
-    margin-top: 20px;
-    padding-top: 10px;
-    border-top: 2px groove #808080;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: sans-serif;
+
+/* Favorites dropdown */
+.ie-favorites-dropdown {
+    position: absolute;
+    top: 56px;
+    right: 32px;
+    background: var(--win-gray);
+    border-top: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+    z-index: 120;
+    min-width: 250px;
+    padding: 2px;
     font-size: 11px;
-    flex-wrap: wrap;
-    gap: 8px;
 }
-.web1-counter-box {
+.ie-fav-item {
+    padding: 4px 8px;
+    cursor: pointer;
+    user-select: none;
     display: flex;
     align-items: center;
     gap: 6px;
+    color: #000000;
 }
-.odometer {
-    background: #000000;
-    color: #00ff00;
-    font-family: "Courier New", monospace;
-    font-weight: bold;
-    padding: 2px 6px;
+.ie-fav-item:hover {
+    background: #000080;
+    color: #ffffff;
+}
+.ie-fav-sep {
+    height: 1px;
+    background: #808080;
+    border-bottom: 1px solid #ffffff;
+    margin: 3px 2px;
+}
+
+/* ============================================================
+   YAHOO! 1995 VINTAGE WEB DIRECTORY & SEARCH
+   ============================================================ */
+.yahoo-wrapper {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: "Times New Roman", Times, serif;
+}
+.yahoo-logo-header {
+    margin: 4px 0 2px 0;
+}
+.yahoo-logo {
+    font-family: "Impact", "Arial Black", Georgia, serif;
+    font-size: 40px;
+    color: #cc0000;
     letter-spacing: 2px;
+    text-shadow: 2px 2px 0px #000000;
+    display: inline-block;
+    cursor: pointer;
+}
+.yahoo-tagline {
+    font-size: 12px;
+    font-style: italic;
+    color: #333333;
+    margin-bottom: 6px;
+}
+.yahoo-top-links {
+    font-size: 12px;
+    margin-bottom: 10px;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    padding: 3px 0;
+    background: #fffbe6;
+}
+.yahoo-top-links a,
+.yahoo-top-links span {
+    margin: 0 6px;
+    color: #0000cc;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.yahoo-search-box {
+    background: #efefef;
+    border: 1px solid #808080;
+    padding: 8px 12px;
+    display: inline-block;
+    margin-bottom: 12px;
+    text-align: center;
+}
+.yahoo-query-input {
+    width: 260px;
+    padding: 3px 6px;
+    font-size: 13px;
+    font-family: monospace;
+    border: 1px inset #808080;
+}
+.yahoo-search-btn {
+    padding: 3px 12px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.yahoo-search-opts {
+    font-size: 11px;
+    margin-top: 4px;
+    color: #444;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+.yahoo-categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px;
+    text-align: left;
+    margin-top: 8px;
+    font-size: 13px;
+}
+.yahoo-cat-card {
+    line-height: 1.4;
+    padding: 2px 4px;
+}
+.yahoo-cat-title {
+    font-weight: bold;
+    font-size: 14px;
+    color: #0000cc;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.yahoo-cat-title:hover {
+    color: #cc0000;
+}
+.yahoo-cat-subs {
+    font-size: 11px;
+    color: #555555;
+    margin-top: 2px;
+}
+.yahoo-sub-link {
+    color: #0000cc;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.yahoo-sub-link:hover {
+    color: #cc0000;
+}
+.yahoo-footer {
+    margin-top: 16px;
+    padding-top: 8px;
+    border-top: 1px solid #808080;
+    font-size: 11px;
+    color: #555555;
+}
+
+/* ============================================================
+   ALTAVISTA 1995 ENGINE
+   ============================================================ */
+.altavista-wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: left;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.altavista-header {
+    border-bottom: 2px solid #000080;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.altavista-logo {
+    font-size: 32px;
+    font-weight: 900;
+    color: #000080;
+    letter-spacing: -1px;
+    font-family: "Arial Black", Arial, sans-serif;
+}
+.altavista-search-panel {
+    background: #f4f4f4;
+    border: 1px solid #808080;
+    padding: 12px;
+    margin-bottom: 14px;
+}
+
+/* ============================================================
+   GOOGLE! BETA 1998
+   ============================================================ */
+.google-wrapper {
+    max-width: 580px;
+    margin: 10px auto;
+    text-align: center;
+    font-family: "Times New Roman", Times, serif;
+}
+.google-retro-logo {
+    font-size: 48px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    margin-bottom: 6px;
+    user-select: none;
+}
+.google-g1 { color: #1a73e8; }
+.google-o1 { color: #ea4335; }
+.google-o2 { color: #fbbc04; }
+.google-g2 { color: #1a73e8; }
+.google-l  { color: #34a853; }
+.google-e  { color: #ea4335; }
+.google-ex { color: #1a73e8; }
+.google-card {
+    background: #eef2f7;
+    border: 1px solid #99b4d1;
+    padding: 12px;
+    display: inline-block;
+    width: 100%;
+    max-width: 440px;
+}
+
+/* ============================================================
+   LYCOS 1995 ENGINE
+   ============================================================ */
+.lycos-wrapper {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+.lycos-logo {
+    font-size: 32px;
+    font-weight: 900;
+    color: #000;
+    background: #ffd700;
+    display: inline-block;
+    padding: 2px 14px;
+    border: 2px solid #000;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+}
+
+/* ============================================================
+   WINDOWS 95 FILE FINDER (find://c/)
+   ============================================================ */
+.win95-find-wrapper {
+    font-family: 'MS Sans Serif', Tahoma, Arial, sans-serif;
+    font-size: 11px;
+    text-align: left;
+}
+.win95-find-tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: -1px;
+    position: relative;
+    z-index: 2;
+}
+.win95-find-tab {
+    padding: 3px 10px;
+    background: var(--win-gray);
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #000;
+    border-bottom: none;
+    cursor: pointer;
+    font-size: 11px;
+}
+.win95-find-tab.is-active {
+    font-weight: bold;
+    background: var(--win-gray);
+    border-bottom: 1px solid var(--win-gray);
+}
+.win95-find-pane {
+    background: var(--win-gray);
+    border: 2px solid;
+    border-color: #fff #000 #000 #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.win95-find-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    gap: 8px;
+}
+.win95-find-label {
+    width: 90px;
+}
+.win95-find-input {
+    flex: 1;
+    padding: 2px 4px;
+    font-size: 11px;
+}
+.win95-find-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+.win95-find-results-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    font-size: 11px;
+}
+.win95-find-results-table th {
+    background: var(--win-gray);
+    border: 1px outset #fff;
+    padding: 2px 6px;
+    text-align: left;
+    font-weight: normal;
+}
+.win95-find-results-table td {
+    padding: 3px 6px;
+    border-bottom: 1px dotted #ccc;
+    cursor: pointer;
+}
+.win95-find-results-table tr:hover td {
+    background: #000080;
+    color: #fff;
+}
+
+/* ============================================================
+   SEARCH ENGINE RESULTS PAGE (SERP)
+   ============================================================ */
+.serp-container {
+    text-align: left;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.serp-header {
+    border-bottom: 1px solid #000080;
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.serp-stats {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 10px;
+}
+.serp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.serp-item {
+    font-size: 13px;
+    line-height: 1.4;
+}
+.serp-title {
+    font-size: 15px;
+    color: #0000cc;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: bold;
+}
+.serp-title:hover {
+    color: #cc0000;
+}
+.serp-url {
+    color: #008000;
+    font-size: 11px;
+    font-family: monospace;
+    margin: 1px 0;
+}
+.serp-snippet {
+    color: #222222;
+    font-size: 12px;
+}
+.serp-empty {
+    padding: 30px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+/* ============================================================
+   WEB 1.0 ARTICLE READER
+   ============================================================ */
+.web1-article-view {
+    text-align: left;
+    font-family: "Times New Roman", Times, serif;
+    line-height: 1.5;
+    padding: 4px;
+}
+.web1-article-bar {
+    background: #f0f0f0;
+    border-bottom: 1px solid #808080;
+    padding: 4px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-family: sans-serif;
+    font-size: 11px;
+}
+.web1-article-title {
+    font-size: 22px;
+    color: #000080;
+    margin: 0 0 8px 0;
 }
 
 /* ============================================================
