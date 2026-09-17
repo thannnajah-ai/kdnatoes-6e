@@ -2332,13 +2332,28 @@
                 </div>
 
                 <!-- Browser Menubar -->
-                <div class="win-menubar">
+                <div class="win-menubar" style="position: relative;">
                     <button class="win-menu-item" id="ie-menu-file"><u>F</u>ile</button>
                     <button class="win-menu-item" id="ie-menu-edit"><u>E</u>dit</button>
-                    <button class="win-menu-item" id="ie-menu-view"><u>V</u>iew</button>
-                    <button class="win-menu-item" id="ie-menu-fav">Fa<u>v</u>orites</button>
-                    <button class="win-menu-item" id="ie-menu-tools"><u>T</u>ools</button>
+                    <button class="win-menu-item" id="ie-menu-view"><u>V</u>iew ▾</button>
+                    <button class="win-menu-item" id="ie-menu-fav">Fa<u>v</u>orites ▾</button>
+                    <button class="win-menu-item" id="ie-menu-tools"><u>T</u>ools ▾</button>
                     <button class="win-menu-item" id="ie-menu-help"><u>H</u>elp</button>
+
+                    <!-- View Menu Dropdown -->
+                    <div class="win-outset" id="ie-view-dropdown" style="display: none; position: absolute; top: 22px; left: 74px; background: var(--win-gray); z-index: 150; min-width: 170px; padding: 2px; box-shadow: 2px 2px 5px rgba(0,0,0,0.4); font-size: 11px;">
+                        <div class="ie-fav-item" id="ie-action-view-source">📄 <u>S</u>ource (Notepad)</div>
+                        <div class="ie-fav-item" id="ie-action-refresh-menu">🔄 <u>R</u>efresh (F5)</div>
+                        <div class="ie-fav-sep"></div>
+                        <div class="ie-fav-item" id="ie-action-home-menu">🏠 <u>H</u>ome Page</div>
+                    </div>
+
+                    <!-- Tools Menu Dropdown -->
+                    <div class="win-outset" id="ie-tools-dropdown" style="display: none; position: absolute; top: 22px; left: 160px; background: var(--win-gray); z-index: 150; min-width: 220px; padding: 2px; box-shadow: 2px 2px 5px rgba(0,0,0,0.4); font-size: 11px;">
+                        <div class="ie-fav-item" id="ie-action-toggle-modem">🔊 <u>D</u>ial-up Sound: <strong id="ie-modem-status-lbl">ON</strong></div>
+                        <div class="ie-fav-sep"></div>
+                        <div class="ie-fav-item" id="ie-action-clear-cache">🗑️ <u>C</u>lear Cache &amp; History</div>
+                    </div>
                 </div>
 
                 <!-- Browser Toolbar -->
@@ -2351,26 +2366,48 @@
                     <div class="ie-toolbar-sep"></div>
                     <button class="win-btn ie-nav-btn" id="ie-btn-search" title="Focus Search">🔍 Search</button>
                     <button class="win-btn ie-nav-btn" id="ie-btn-favorites" title="Favorites">⭐ Favorites ▾</button>
+                    <button class="win-btn ie-nav-btn" id="ie-btn-modem-sound" title="Toggle 28.8k Modem Dial-Up Sound">🔊 Sound: ON</button>
                     <div class="ie-logo-spinning" id="ie-spinner" title="Windows Internet Explorer">e</div>
                 </div>
 
                 <!-- Dropdown Menu Favorites -->
                 <div class="ie-favorites-dropdown win-outset" id="ie-favorites-dropdown" style="display: none;">
+                    <div class="ie-fav-item" id="ie-action-add-fav" style="font-weight: bold; border-bottom: 1px dashed #808080;">⭐ Add to Favorites...</div>
+                    <div class="ie-fav-sep"></div>
+                    <div style="font-size: 10px; color: #555; padding: 2px 8px; font-weight: bold;">SEARCH ENGINES:</div>
                     <div class="ie-fav-item" data-action="url" data-url="http://www.yahoo.com/">🌐 Yahoo! (1995 Web Directory)</div>
                     <div class="ie-fav-item" data-action="url" data-url="http://www.altavista.digital.com/">⚡ AltaVista Search (1995)</div>
                     <div class="ie-fav-item" data-action="url" data-url="http://www.google.com/">🔍 Google! Beta (1998)</div>
                     <div class="ie-fav-item" data-action="url" data-url="http://www.lycos.com/">🐕 Lycos: Catalog of the Web</div>
                     <div class="ie-fav-item" data-action="url" data-url="http://www.webcrawler.com/">🕸️ WebCrawler (1994)</div>
                     <div class="ie-fav-sep"></div>
+                    <div style="font-size: 10px; color: #555; padding: 2px 8px; font-weight: bold;">CLASSIC 90s ARCHIVES:</div>
+                    <div class="ie-fav-item" data-action="url" data-url="http://www.geocities.com/">🌐 GeoCities: Free Home Pages (1995)</div>
+                    <div class="ie-fav-item" data-action="url" data-url="http://www.amazon.com/">📚 Amazon.com: Earth's Biggest Bookstore (1995)</div>
+                    <div class="ie-fav-item" data-action="url" data-url="http://www.microsoft.com/">🪟 Microsoft: Where do you want to go today? (1995)</div>
+                    <div class="ie-fav-item" data-action="url" data-url="http://www.imdb.com/">🎬 IMDb: Internet Movie Database (1996)</div>
+                    <div class="ie-fav-item" data-action="url" data-url="http://www.spacejam.com/">🏀 Space Jam (1996 Warner Bros)</div>
+                    <div class="ie-fav-item" data-action="url" data-url="http://home.netscape.com/">🧭 Netscape Welcome (1995)</div>
+                    <div class="ie-fav-item" data-action="url" data-url="http://www.apple.com/">🍎 Apple: Think Different (1997)</div>
+                    <div class="ie-fav-item" data-action="url" data-url="http://info.cern.ch/">🔬 W3C World Wide Web Project (1991)</div>
+                    <div class="ie-fav-sep"></div>
                     <div class="ie-fav-item" data-action="engine" data-engine="find">📁 Windows 95 File Finder (Local)</div>
+                    <div id="ie-custom-favs-box" style="display: none;">
+                        <div class="ie-fav-sep"></div>
+                        <div style="font-size: 10px; color: #000080; padding: 2px 8px; font-weight: bold;">MY FAVORITES:</div>
+                        <div id="ie-custom-favs-list"></div>
+                    </div>
                 </div>
 
                 <!-- Address Bar -->
                 <div class="ie-address-row">
                     <span class="ie-address-label"><u>A</u>ddress:</span>
-                    <div class="ie-address-input-wrapper win-inset">
+                    <div class="ie-address-input-wrapper win-inset" style="position: relative;">
                         <span class="ie-address-proto-icon" id="ie-proto-icon">🌐</span>
                         <input type="text" class="ie-address-input" id="ie-url-input" value="http://www.yahoo.com/" placeholder="Ketik URL web atau kata kunci pencarian..." spellcheck="false" autocomplete="off" />
+                        <button class="win-btn ie-address-drop-btn" id="ie-btn-address-history" title="History &amp; Suggestions" tabindex="-1">▾</button>
+                        <!-- Address Auto-Suggest / History Dropdown -->
+                        <div class="win-outset ie-address-suggestions" id="ie-address-suggestions" style="display: none;"></div>
                     </div>
                     <button class="win-btn" id="ie-btn-go" style="padding: 2px 12px; font-weight: bold;">Go</button>
                     <div class="ie-links-label">Engines:</div>
@@ -3177,6 +3214,53 @@
         </div>
     </div>
 
+    <!-- Dialog "Add to Favorites" -->
+    <div class="win-modal-backdrop" id="ie-modal-add-fav-backdrop" aria-hidden="true">
+        <div class="win-dialog-box win-outset" style="min-width: 360px;" role="dialog" aria-labelledby="ie-fav-modal-title">
+            <div class="win-titlebar">
+                <span id="ie-fav-modal-title">Add Favorite</span>
+                <button class="win-btn-ctrl win-outset" id="ie-btn-close-fav-x" aria-label="Tutup">&times;</button>
+            </div>
+            <div class="dialog-body" style="padding: 12px 14px;">
+                <div style="font-size: 26px; line-height: 1;">⭐</div>
+                <div class="dialog-content" style="font-size: 12px;">
+                    <p style="margin: 0 0 8px 0;">Internet Explorer will add this page to your Favorites list.</p>
+                    <div>
+                        <label for="ie-add-fav-name" style="display: block; margin-bottom: 3px; font-weight: bold;"><u>N</u>ame:</label>
+                        <input type="text" id="ie-add-fav-name" class="win-inset" style="width: 100%; padding: 3px 5px; font-size: 12px;" />
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <button class="win-btn" id="ie-btn-add-fav-ok" style="min-width: 75px; font-weight: bold;">OK</button>
+                <button class="win-btn" id="ie-btn-add-fav-cancel" style="min-width: 75px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dialog "Notepad - [Page Source]" -->
+    <div class="win-modal-backdrop" id="ie-modal-source-backdrop" aria-hidden="true">
+        <div class="win-dialog-box win-outset" style="min-width: 580px; max-width: 85vw;" role="dialog" aria-labelledby="ie-source-title">
+            <div class="win-titlebar">
+                <span id="ie-source-title">Notepad - [Page Source]</span>
+                <button class="win-btn-ctrl win-outset" id="ie-btn-close-source-x" aria-label="Tutup">&times;</button>
+            </div>
+            <div class="win-menubar" style="margin-bottom: 2px;">
+                <button class="win-menu-item"><u>F</u>ile</button>
+                <button class="win-menu-item"><u>E</u>dit</button>
+                <button class="win-menu-item"><u>S</u>earch</button>
+                <button class="win-menu-item"><u>H</u>elp</button>
+            </div>
+            <div style="padding: 4px;">
+                <textarea id="ie-source-textarea" readonly class="win-inset" style="width: 100%; height: 320px; font-family: 'Courier New', monospace; font-size: 12px; background: #ffffff; color: #000000; padding: 6px; box-sizing: border-box; white-space: pre; overflow: auto;"></textarea>
+            </div>
+            <div class="dialog-actions">
+                <button class="win-btn" id="ie-btn-copy-source" style="min-width: 100px;">Copy Source</button>
+                <button class="win-btn" id="ie-btn-close-source" style="min-width: 80px;">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 1. Dialog "IT'S NOT FAIR" -->
     <div class="win-modal-backdrop" id="dialog-fair-backdrop" aria-hidden="true">
         <div class="win-dialog-box win-outset dialog-not-fair" role="dialog" aria-labelledby="fair-title">
@@ -3596,6 +3680,14 @@
                     <path d="M5 8c0-1.5 1-3 3-3s2.5 1 2.5 2H5c0 1.5 1 2 2.5 2" stroke="#fff" stroke-width="1.2" fill="none" />
                 </svg>
                 <span>Internet Explorer (Web Search)</span>
+            </a>
+            <a href="#ie-window" class="start-menu-link" id="start-menu-find" title="Cari file dan folder di komputer">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <circle cx="7" cy="7" r="4" stroke="#000080" stroke-width="1.8" fill="none" />
+                    <line x1="10" y1="10" x2="14" y2="14" stroke="#000080" stroke-width="2" stroke-linecap="round" />
+                    <rect x="2" y="2" width="3" height="2" fill="#f1c40f" stroke="#000" stroke-width="0.5" />
+                </svg>
+                <span>Find: Files or Folders...</span>
             </a>
             <a href="#solitaire-window" class="start-menu-link">
                 <svg viewBox="0 0 16 16" fill="none">

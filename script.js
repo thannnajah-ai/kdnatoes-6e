@@ -6506,15 +6506,18 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
             { name: 'Calc.exe', folder: 'C:\\Program Files\\Accessories', size: '24 KB', type: 'Application', winId: 'calc-window', icon: '🧮' },
             { name: 'Winamp.exe', folder: 'C:\\Program Files\\Winamp', size: '98 KB', type: 'Application', winId: 'winamp-window', icon: '⚡' },
             { name: 'PhotoBooth.exe', folder: 'C:\\Windows\\Media', size: '45 KB', type: 'Application', winId: 'photobooth-window', icon: '📷' },
+            { name: 'Explorer.exe', folder: 'C:\\Windows', size: '82 KB', type: 'Application', winId: 'ie-window', icon: '🌐' },
+            { name: 'Notepad.exe', folder: 'C:\\Windows', size: '20 KB', type: 'Application', winId: '', icon: '📄' },
+            { name: 'Minesweeper.exe', folder: 'C:\\Windows', size: '28 KB', type: 'Application', winId: '', icon: '💣' },
             { name: 'Recycle Bin', folder: 'C:\\Recycled', size: '0 KB', type: 'System Folder', winId: 'recycle-window', icon: '🗑️' },
-            { name: 'Jadwal.txt', folder: 'C:\\Documents\\Sekolah', size: '12 KB', type: 'Text Document', winId: 'jadwal-window', icon: '📅' },
-            { name: 'Tugas.doc', folder: 'C:\\Documents\\Sekolah', size: '18 KB', type: 'WordPad Document', winId: 'tugas-window', icon: '📝' },
-            { name: 'Personalia.dat', folder: 'C:\\KDN\\Data', size: '120 KB', type: 'Data File', winId: 'kdn-window', icon: '👥' },
-            { name: 'Ujian.exe', folder: 'C:\\Programs\\Simulasi', size: '35 KB', type: 'Application', winId: 'exam-window', icon: '🎓' },
-            { name: 'Kampus.doc', folder: 'C:\\Documents\\PTN', size: '28 KB', type: 'WordPad Document', winId: 'campus-window', icon: '🏛️' },
+            { name: 'Autoexec.bat', folder: 'C:\\', size: '1 KB', type: 'MS-DOS Batch File', winId: '', icon: '⚙️' },
+            { name: 'Config.sys', folder: 'C:\\', size: '1 KB', type: 'System File', winId: '', icon: '⚙️' },
+            { name: 'System.ini', folder: 'C:\\Windows', size: '3 KB', type: 'Configuration Settings', winId: '', icon: '📝' },
+            { name: 'Registry.dat', folder: 'C:\\Windows\\System', size: '120 KB', type: 'System Data File', winId: '', icon: '👥' },
+            { name: 'Clouds.bmp', folder: 'C:\\Windows', size: '150 KB', type: 'Bitmap Image', winId: '', icon: '🖼️' },
+            { name: 'Tada.wav', folder: 'C:\\Windows\\Media', size: '34 KB', type: 'Waveform Sound', winId: '', icon: '🔊' },
+            { name: 'Chimes.wav', folder: 'C:\\Windows\\Media', size: '22 KB', type: 'Waveform Sound', winId: '', icon: '🔊' },
             { name: 'Telkom.exe', folder: 'C:\\Windows\\DialUp', size: '30 KB', type: 'Dial-Up Connection', winId: 'telkom-window', icon: '☎️' },
-            { name: 'Mading.txt', folder: 'C:\\Documents\\Sekolah', size: '8 KB', type: 'Text Document', winId: 'mading-window', icon: '📌' },
-            { name: 'Friendster.html', folder: 'C:\\Internet\\WebPages', size: '15 KB', type: 'HTML Document', winId: 'friendster-window', icon: '🌐' },
             { name: 'Themes.cpl', folder: 'C:\\Windows\\System', size: '16 KB', type: 'Control Panel Applet', winId: 'themes-window', icon: '🎨' }
         ];
 
@@ -7091,11 +7094,11 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
         // ==============================================================
         // PAGE GENERATOR: Windows 95 File Finder (find://c/)
         // ==============================================================
-        function getWin95FindHtml(searchQuery = '', matchedFiles = null) {
+        function getWin95FindHtml(searchQuery = '', matchedFiles = null, activeTab = 'name') {
             const files = matchedFiles !== null ? matchedFiles : OS_FILES;
 
             const rowsHtml = files.length > 0 ? files.map(f => `
-                <tr class="find-file-row" data-winid="${f.winId}" title="Double-click to open ${f.name}">
+                <tr class="find-file-row" data-winid="${f.winId || ''}" title="Double-click to open ${f.name}">
                     <td>${f.icon} <strong>${f.name}</strong></td>
                     <td>${f.folder}</td>
                     <td>${f.size}</td>
@@ -7112,39 +7115,105 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
             return `
                 <div class="win95-find-wrapper">
                     <div class="win95-find-tabs">
-                        <button class="win95-find-tab is-active" id="tab-name-loc">Name &amp; Location</button>
-                        <button class="win95-find-tab" id="tab-date">Date Modified</button>
-                        <button class="win95-find-tab" id="tab-advanced">Advanced</button>
+                        <button type="button" class="win95-find-tab ${activeTab === 'name' ? 'is-active' : ''}" id="tab-name-loc">Name &amp; Location</button>
+                        <button type="button" class="win95-find-tab ${activeTab === 'date' ? 'is-active' : ''}" id="tab-date">Date Modified</button>
+                        <button type="button" class="win95-find-tab ${activeTab === 'advanced' ? 'is-active' : ''}" id="tab-advanced">Advanced</button>
                     </div>
 
                     <div class="win95-find-pane">
                         <form id="win95-find-form" onsubmit="return false;">
-                            <div class="win95-find-row">
-                                <span class="win95-find-label"><u>N</u>amed:</span>
-                                <input type="text" id="find-name-input" class="win-inset win95-find-input" value="${searchQuery}" placeholder="Type filename (e.g. paint, *.exe, doc, txt)..." />
+                            <!-- Tab 1: Name & Location -->
+                            <div class="win95-tab-pane ${activeTab === 'name' ? 'is-active' : ''}" id="pane-name-loc">
+                                <div class="win95-find-row">
+                                    <span class="win95-find-label"><u>N</u>amed:</span>
+                                    <input type="text" id="find-name-input" class="win-inset win95-find-input" value="${escapeHtml(searchQuery)}" placeholder="Type filename (e.g. paint, *.exe, doc, txt)..." />
+                                </div>
+                                <div class="win95-find-row">
+                                    <span class="win95-find-label"><u>L</u>ook in:</span>
+                                    <select id="find-lookin-select" class="win-inset win95-find-input" style="height: 22px;">
+                                        <option value="C:\\">C:\\ (Local hard drive)</option>
+                                        <option value="C:\\Windows">C:\\Windows</option>
+                                        <option value="C:\\Program Files">C:\\Program Files</option>
+                                        <option value="C:\\Documents">C:\\Documents</option>
+                                    </select>
+                                </div>
+                                <div class="win95-find-row" style="margin-left: 98px;">
+                                    <label><input type="checkbox" id="find-subfolders" checked /> Include subfolders</label>
+                                </div>
                             </div>
-                            <div class="win95-find-row">
-                                <span class="win95-find-label"><u>L</u>ook in:</span>
-                                <select class="win-inset win95-find-input" style="height: 22px;">
-                                    <option>C:\\ (Local hard drive)</option>
-                                    <option>C:\\Windows</option>
-                                    <option>C:\\Program Files</option>
-                                    <option>C:\\Documents</option>
-                                </select>
+
+                            <!-- Tab 2: Date Modified -->
+                            <div class="win95-tab-pane ${activeTab === 'date' ? 'is-active' : ''}" id="pane-date">
+                                <div style="margin-bottom: 6px;">
+                                    <label style="display: block; margin-bottom: 4px;">
+                                        <input type="radio" name="find-date-mode" value="all" checked /> All files
+                                    </label>
+                                    <label style="display: block; margin-bottom: 4px;">
+                                        <input type="radio" name="find-date-mode" value="recent" /> Find all files created or modified:
+                                    </label>
+                                    <div style="margin-left: 20px; font-size: 11px; display: flex; flex-direction: column; gap: 4px;">
+                                        <label>
+                                            <input type="radio" name="find-date-range" value="between" checked /> between 
+                                            <input type="text" value="01/01/95" class="win-inset" style="width: 70px; font-size: 11px; padding: 1px;" readonly /> and 
+                                            <input type="text" value="31/12/95" class="win-inset" style="width: 70px; font-size: 11px; padding: 1px;" readonly />
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="find-date-range" value="months" /> during previous 
+                                            <input type="number" value="1" min="1" max="12" class="win-inset" style="width: 40px; font-size: 11px; padding: 1px;" /> month(s)
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="find-date-range" value="days" /> during previous 
+                                            <input type="number" value="7" min="1" max="365" class="win-inset" style="width: 40px; font-size: 11px; padding: 1px;" /> day(s)
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="win95-find-row" style="margin-left: 98px;">
-                                <label><input type="checkbox" checked /> Include subfolders</label>
+
+                            <!-- Tab 3: Advanced -->
+                            <div class="win95-tab-pane ${activeTab === 'advanced' ? 'is-active' : ''}" id="pane-advanced">
+                                <div class="win95-find-row">
+                                    <span class="win95-find-label">Of <u>t</u>ype:</span>
+                                    <select id="find-type-select" class="win-inset win95-find-input" style="height: 22px;">
+                                        <option value="">All Files and Folders</option>
+                                        <option value="Application">Application (*.exe)</option>
+                                        <option value="MS-DOS">MS-DOS Application</option>
+                                        <option value="Text Document">Text Document (*.txt)</option>
+                                        <option value="WordPad">WordPad Document (*.doc)</option>
+                                        <option value="Waveform">Audio Sound (*.wav)</option>
+                                        <option value="Bitmap">Bitmap Image (*.bmp)</option>
+                                    </select>
+                                </div>
+                                <div class="win95-find-row">
+                                    <span class="win95-find-label"><u>C</u>ontaining text:</span>
+                                    <input type="text" id="find-text-input" class="win-inset win95-find-input" placeholder="Search inside file contents..." />
+                                </div>
+                                <div class="win95-find-row">
+                                    <span class="win95-find-label"><u>S</u>ize is:</span>
+                                    <select class="win-inset" style="height: 22px; width: 80px; font-size: 11px;">
+                                        <option>At least</option>
+                                        <option>At most</option>
+                                    </select>
+                                    <input type="number" class="win-inset" style="width: 60px; font-size: 11px; padding: 2px;" placeholder="KB" />
+                                    <span>KB</span>
+                                </div>
                             </div>
 
                             <div class="win95-find-actions">
                                 <button type="submit" id="btn-find-now" class="win-btn" style="padding: 3px 14px; font-weight: bold;">Find Now</button>
+                                <button type="button" id="btn-find-stop" class="win-btn" style="padding: 3px 12px;" disabled>Stop</button>
                                 <button type="button" id="btn-find-reset" class="win-btn" style="padding: 3px 12px;">New Search</button>
                             </div>
                         </form>
                     </div>
 
+                    <!-- Animated Scanning Progress Indicator -->
+                    <div id="find-scanning-indicator" class="win95-find-scanning" style="display: none;">
+                        <span class="win95-find-spinner">🔍</span>
+                        <span id="find-scan-text">Searching C:\\Windows...</span>
+                    </div>
+
                     <div style="font-size: 11px; color: #333; margin-bottom: 4px; display: flex; justify-content: space-between;">
-                        <span>Found ${files.length} file(s) on Drive C:</span>
+                        <span id="find-results-count">Found ${files.length} file(s) on Drive C:</span>
                         <span style="color: #666;">Double-click any item to open</span>
                     </div>
 
@@ -7158,7 +7227,7 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
                                     <th>Type</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="find-results-tbody">
                                 ${rowsHtml}
                             </tbody>
                         </table>
@@ -7166,65 +7235,222 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
                 </div>`;
         }
 
+        let findScanTimer = null;
+
         function mountWin95Find(currentQuery = '') {
             const form = document.getElementById('win95-find-form');
             const input = document.getElementById('find-name-input');
+            const btnNow = document.getElementById('btn-find-now');
+            const btnStop = document.getElementById('btn-find-stop');
             const btnReset = document.getElementById('btn-find-reset');
+            const scanIndicator = document.getElementById('find-scanning-indicator');
+            const scanText = document.getElementById('find-scan-text');
+            const resultsTbody = document.getElementById('find-results-tbody');
+            const resultsCount = document.getElementById('find-results-count');
 
-            if (form && input) {
+            // Tab Switching Logic
+            const tabButtons = [
+                { tab: document.getElementById('tab-name-loc'), pane: document.getElementById('pane-name-loc') },
+                { tab: document.getElementById('tab-date'), pane: document.getElementById('pane-date') },
+                { tab: document.getElementById('tab-advanced'), pane: document.getElementById('pane-advanced') }
+            ];
+
+            tabButtons.forEach(item => {
+                if (item.tab && item.pane) {
+                    item.tab.addEventListener('click', () => {
+                        tabButtons.forEach(i => {
+                            if (i.tab) i.tab.classList.remove('is-active');
+                            if (i.pane) i.pane.classList.remove('is-active');
+                        });
+                        item.tab.classList.add('is-active');
+                        item.pane.classList.add('is-active');
+                        try { playRetroClick(); } catch (e) { }
+                    });
+                }
+            });
+
+            function performFind() {
+                if (findScanTimer) clearInterval(findScanTimer);
+
+                const q = input ? input.value.trim().toLowerCase() : '';
+                const typeSelect = document.getElementById('find-type-select');
+                const selectedType = typeSelect ? typeSelect.value.toLowerCase() : '';
+                const textInput = document.getElementById('find-text-input');
+                const textQuery = textInput ? textInput.value.trim().toLowerCase() : '';
+                const lookinSelect = document.getElementById('find-lookin-select');
+                const lookinFolder = lookinSelect ? lookinSelect.value : 'C:\\';
+                const subfolders = document.getElementById('find-subfolders')?.checked !== false;
+
+                if (scanIndicator) scanIndicator.style.display = 'flex';
+                if (btnNow) btnNow.disabled = true;
+                if (btnStop) btnStop.disabled = false;
+                spinLogo(500);
+
+                const scanPaths = [
+                    'Searching C:\\Windows\\System...',
+                    'Searching C:\\Program Files\\Accessories...',
+                    'Searching C:\\Documents\\...',
+                    'Searching C:\\Windows\\Media...'
+                ];
+                let scanIdx = 0;
+                if (scanText) scanText.textContent = scanPaths[0];
+
+                findScanTimer = setInterval(() => {
+                    scanIdx = (scanIdx + 1) % scanPaths.length;
+                    if (scanText) scanText.textContent = scanPaths[scanIdx];
+                }, 120);
+
+                setTimeout(() => {
+                    if (findScanTimer) {
+                        clearInterval(findScanTimer);
+                        findScanTimer = null;
+                    }
+                    if (scanIndicator) scanIndicator.style.display = 'none';
+                    if (btnNow) btnNow.disabled = false;
+                    if (btnStop) btnStop.disabled = true;
+
+                    let filtered = OS_FILES.filter(f => {
+                        // 1. Name query filter
+                        if (q && q !== '*') {
+                            if (q.startsWith('*.')) {
+                                const ext = q.slice(1).toLowerCase();
+                                if (!f.name.toLowerCase().endsWith(ext)) return false;
+                            } else {
+                                if (!f.name.toLowerCase().includes(q) && !f.type.toLowerCase().includes(q)) return false;
+                            }
+                        }
+                        // 2. Folder filter
+                        if (lookinFolder !== 'C:\\') {
+                            if (subfolders) {
+                                if (!f.folder.startsWith(lookinFolder)) return false;
+                            } else {
+                                if (f.folder !== lookinFolder) return false;
+                            }
+                        }
+                        // 3. Type filter
+                        if (selectedType) {
+                            if (!f.type.toLowerCase().includes(selectedType)) return false;
+                        }
+                        // 4. Containing text filter
+                        if (textQuery) {
+                            if (!f.name.toLowerCase().includes(textQuery) && !f.type.toLowerCase().includes(textQuery)) return false;
+                        }
+                        return true;
+                    });
+
+                    if (resultsTbody) {
+                        resultsTbody.innerHTML = filtered.length > 0 ? filtered.map(f => `
+                            <tr class="find-file-row" data-winid="${f.winId || ''}" title="Double-click to open ${f.name}">
+                                <td>${f.icon} <strong>${f.name}</strong></td>
+                                <td>${f.folder}</td>
+                                <td>${f.size}</td>
+                                <td>${f.type}</td>
+                            </tr>
+                        `).join('') : `
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #888; padding: 14px;">
+                                    No files or folders found matching the specified criteria.
+                                </td>
+                            </tr>
+                        `;
+                    }
+
+                    if (resultsCount) {
+                        resultsCount.textContent = `Found ${filtered.length} file(s) on Drive C:`;
+                    }
+                    setStatus(`Found ${filtered.length} file(s)`);
+                    bindResultRows();
+                }, 420);
+            }
+
+            if (form) {
                 form.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    const q = input.value.trim().toLowerCase();
-                    let filtered = OS_FILES;
-                    if (q && q !== '*') {
-                        filtered = OS_FILES.filter(f =>
-                            f.name.toLowerCase().includes(q) ||
-                            f.folder.toLowerCase().includes(q) ||
-                            f.type.toLowerCase().includes(q)
-                        );
-                    }
-                    spinLogo(200);
-                    navigateTo({
-                        url: q ? `find://c/?q=${encodeURIComponent(q)}` : 'find://c/',
-                        title: 'Find: Files or Folders',
-                        engine: 'find',
-                        html: getWin95FindHtml(q, filtered),
-                        onMount: () => mountWin95Find(q)
-                    });
+                    performFind();
                 });
                 setTimeout(() => { if (input) input.focus(); }, 50);
             }
 
-            if (btnReset && input) {
+            if (btnStop) {
+                btnStop.addEventListener('click', () => {
+                    if (findScanTimer) {
+                        clearInterval(findScanTimer);
+                        findScanTimer = null;
+                    }
+                    if (scanIndicator) scanIndicator.style.display = 'none';
+                    if (btnNow) btnNow.disabled = false;
+                    if (btnStop) btnStop.disabled = true;
+                    setStatus('Search stopped');
+                    try { playRetroClick(); } catch (e) { }
+                });
+            }
+
+            if (btnReset) {
                 btnReset.addEventListener('click', () => {
-                    input.value = '';
-                    navigateTo({
-                        url: 'find://c/',
-                        title: 'Find: Files or Folders',
-                        engine: 'find',
-                        html: getWin95FindHtml('', OS_FILES),
-                        onMount: () => mountWin95Find('')
+                    if (findScanTimer) {
+                        clearInterval(findScanTimer);
+                        findScanTimer = null;
+                    }
+                    if (scanIndicator) scanIndicator.style.display = 'none';
+                    if (btnNow) btnNow.disabled = false;
+                    if (btnStop) btnStop.disabled = true;
+                    if (input) input.value = '';
+                    const textInput = document.getElementById('find-text-input');
+                    if (textInput) textInput.value = '';
+                    const typeSelect = document.getElementById('find-type-select');
+                    if (typeSelect) typeSelect.selectedIndex = 0;
+                    const lookinSelect = document.getElementById('find-lookin-select');
+                    if (lookinSelect) lookinSelect.selectedIndex = 0;
+
+                    // Switch back to tab 1
+                    tabButtons.forEach(i => {
+                        if (i.tab) i.tab.classList.remove('is-active');
+                        if (i.pane) i.pane.classList.remove('is-active');
+                    });
+                    if (tabButtons[0].tab) tabButtons[0].tab.classList.add('is-active');
+                    if (tabButtons[0].pane) tabButtons[0].pane.classList.add('is-active');
+
+                    if (resultsTbody) {
+                        resultsTbody.innerHTML = OS_FILES.map(f => `
+                            <tr class="find-file-row" data-winid="${f.winId || ''}" title="Double-click to open ${f.name}">
+                                <td>${f.icon} <strong>${f.name}</strong></td>
+                                <td>${f.folder}</td>
+                                <td>${f.size}</td>
+                                <td>${f.type}</td>
+                            </tr>
+                        `).join('');
+                    }
+                    if (resultsCount) {
+                        resultsCount.textContent = `Found ${OS_FILES.length} file(s) on Drive C:`;
+                    }
+                    setStatus('Ready');
+                    bindResultRows();
+                    try { playRetroClick(); } catch (e) { }
+                });
+            }
+
+            function bindResultRows() {
+                document.querySelectorAll('.find-file-row').forEach(row => {
+                    const launch = () => {
+                        const winId = row.dataset.winid;
+                        if (winId && typeof activateWindow === 'function') {
+                            activateWindow(winId);
+                            try { playRetroClick(); } catch (e) { }
+                        }
+                    };
+                    row.addEventListener('dblclick', launch);
+                    row.addEventListener('click', () => {
+                        document.querySelectorAll('.find-file-row').forEach(r => {
+                            r.style.background = '';
+                            r.style.color = '';
+                        });
+                        row.style.background = '#000080';
+                        row.style.color = '#ffffff';
                     });
                 });
             }
 
-            // Click or double-click to launch program / open window
-            document.querySelectorAll('.find-file-row').forEach(row => {
-                const launch = () => {
-                    const winId = row.dataset.winid;
-                    if (winId && typeof activateWindow === 'function') {
-                        activateWindow(winId);
-                        try { playRetroClick(); } catch (e) { }
-                    }
-                };
-                row.addEventListener('dblclick', launch);
-                row.addEventListener('click', (e) => {
-                    // Click selects row, if clicked again launches
-                    document.querySelectorAll('.find-file-row').forEach(r => r.style.background = '');
-                    row.style.background = '#000080';
-                    row.style.color = '#ffffff';
-                });
-            });
+            bindResultRows();
         }
 
         // ==============================================================
@@ -7240,6 +7466,8 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
             searchAbortCtrl = new AbortController();
 
             spinLogo(600);
+            try { playModemConnect(); } catch (e) { }
+            try { recordRecentHistory({ title: `Search: ${q} (${engine.toUpperCase()})`, url: q }); } catch (e) { }
             setStatus(`Searching ${engine.toUpperCase()} for "${q}"...`);
 
             // 1. Check local retro topic matches
@@ -7478,15 +7706,518 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
         }
 
         // ==============================================================
+        // CLASSIC 1990s PRESET WEB ARCHIVES
+        // ==============================================================
+        const CLASSIC_PAGES = {
+            'http://www.spacejam.com/': {
+                title: 'Space Jam Official Movie Site (1996)',
+                html: `
+                    <div style="background: #000000; color: #ffffff; min-height: 380px; padding: 16px; text-align: center; font-family: 'Comic Sans MS', 'Arial', cursive, sans-serif;">
+                        <div style="font-size: 36px; font-weight: bold; color: #f1c40f; text-shadow: 2px 2px #e74c3c; margin-bottom: 6px;">
+                            ★★★ SPACE JAM ★★★
+                        </div>
+                        <div style="font-size: 13px; color: #00ffff; margin-bottom: 16px;">
+                            WARNER BROS. OFFICIAL 1996 CYBER HOMESTEAD
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; max-width: 520px; margin: 0 auto 20px auto;">
+                            <div class="win-btn" style="background: #e74c3c; color: #fff; padding: 10px 14px; border-radius: 20px; cursor: pointer;" onclick="window.__ieSearch('Michael Jordan Space Jam', 'yahoo')">🪐 Planet B-Ball</div>
+                            <div class="win-btn" style="background: #3498db; color: #fff; padding: 10px 14px; border-radius: 20px; cursor: pointer;" onclick="window.__ieSearch('Looney Tunes Bugs Bunny', 'yahoo')">🌙 Lunar Tunes</div>
+                            <div class="win-btn" style="background: #2ecc71; color: #fff; padding: 10px 14px; border-radius: 20px; cursor: pointer;" onclick="window.__ieSearch('Space Jam Soundtrack Quad City DJ', 'yahoo')">⭐ Junior Jam</div>
+                            <div class="win-btn" style="background: #f39c12; color: #fff; padding: 10px 14px; border-radius: 20px; cursor: pointer;" onclick="window.__ieSearch('Space Jam Behind The Scenes Warner Bros', 'yahoo')">🚀 Behind The Jam</div>
+                        </div>
+                        <p style="font-size: 12px; color: #aaa; max-width: 480px; margin: 0 auto;">
+                            Best viewed with Netscape Navigator 3.0 or Microsoft Internet Explorer at 640x480 resolution with 256 colors.
+                        </p>
+                        <div style="margin-top: 14px; font-size: 10px; color: #666;">
+                            &copy; 1996 Warner Bros. All Rights Reserved.
+                        </div>
+                    </div>`
+            },
+            'http://home.netscape.com/': {
+                title: 'Welcome to Netscape Communications (1995)',
+                html: `
+                    <div style="font-family: 'Times New Roman', Times, serif; padding: 14px; text-align: left; line-height: 1.5;">
+                        <div style="display: flex; align-items: center; gap: 12px; border-bottom: 2px solid #000080; padding-bottom: 8px; margin-bottom: 12px;">
+                            <div style="font-size: 32px;">🧭</div>
+                            <div>
+                                <div style="font-size: 26px; font-weight: bold; color: #000080;">WELCOME TO NETSCAPE</div>
+                                <div style="font-size: 12px; color: #555;">EXPLORING THE INTERNET • MOZILLA AT WORK</div>
+                            </div>
+                        </div>
+                        <p><strong>NETSCAPE DESTINATIONS:</strong> Company &amp; Products | Netscape Store | News &amp; Reference | Assistance</p>
+                        <hr size="2" color="#000080" />
+                        <div style="background: #eef2f7; border: 1px solid #808080; padding: 10px; margin-bottom: 14px;">
+                            <h3 style="margin: 0 0 6px 0; color: #000080;">⭐ NETSCAPE NAVIGATOR 2.0 BETA IS HERE</h3>
+                            <p style="margin: 0; font-size: 13px;">Download the latest preview release featuring LiveScript (JavaScript), inline Java Applets, animated GIF support, and client-side image maps.</p>
+                        </div>
+                        <p style="font-size: 12px; color: #555;">Netscape Communications Corp., 501 E. Middlefield Rd., Mountain View, CA 94043.</p>
+                    </div>`
+            },
+            'http://www.apple.com/': {
+                title: 'Apple Computer: Think Different (1997)',
+                html: `
+                    <div style="font-family: 'Times New Roman', Times, serif; padding: 14px; text-align: center; line-height: 1.5;">
+                        <div style="font-size: 40px; margin-bottom: 6px;">🍏</div>
+                        <h1 style="font-size: 28px; font-weight: normal; font-style: italic; margin: 0 0 10px 0; letter-spacing: 2px;">Think Different.</h1>
+                        <hr size="1" color="#808080" style="max-width: 400px; margin: 0 auto 16px auto;" />
+                        <div style="font-size: 14px; max-width: 500px; margin: 0 auto 16px auto; text-align: left; background: #fdfae7; border: 1px solid #d4c18f; padding: 12px;">
+                            <p style="margin: 0 0 8px 0;"><strong>Here's to the crazy ones.</strong> The misfits. The rebels. The troublemakers. The round pegs in the square holes.</p>
+                            <p style="margin: 0;">Introducing the Apple PowerBook G3 — The fastest portable computer on the planet. Powered by the PowerPC 750 processor at 250MHz.</p>
+                        </div>
+                        <div style="font-size: 11px; color: #666;">
+                            &copy; 1997 Apple Computer, Inc. 1 Infinite Loop, Cupertino, CA 95014.
+                        </div>
+                    </div>`
+            },
+            'http://info.cern.ch/': {
+                title: 'The World Wide Web project (CERN 1991)',
+                html: `
+                    <div style="font-family: 'Times New Roman', Times, serif; padding: 14px; text-align: left; line-height: 1.5;">
+                        <h1 style="font-size: 24px; margin: 0 0 8px 0;">World Wide Web</h1>
+                        <p>The WorldWideWeb (W3) is a wide-area hypermedia information retrieval initiative aiming to give universal access to a large universe of documents.</p>
+                        <p>Everything there is online about W3 is linked directly or indirectly to this document, including an executive summary of the project, Mailing lists , Policy , November's W3 news , Frequently Asked Questions .</p>
+                        <dl style="font-size: 13px;">
+                            <dt><strong><a href="#" onclick="window.__ieSearch('Tim Berners-Lee', 'yahoo'); return false;">What's out there?</a></strong></dt>
+                            <dd>Pointers to the world's online information, subjects, W3 servers, etc.</dd>
+                            <dt><strong><a href="#" onclick="window.__ieSearch('W3C Web Standards', 'yahoo'); return false;">Help</a></strong></dt>
+                            <dd>On the browser you are using</dd>
+                            <dt><strong><a href="#" onclick="window.__ieSearch('Software Products W3', 'yahoo'); return false;">Software Products</a></strong></dt>
+                            <dd>A list of W3 project components (line mode browser, server, library).</dd>
+                        </dl>
+                        <p style="font-size: 11px; color: #666; margin-top: 20px;">Tim Berners-Lee, CERN, Geneva, Switzerland.</p>
+                    </div>`
+            },
+            'http://www.geocities.com/': {
+                title: 'Welcome to GeoCities! - Home Pages on the World Wide Web (1995)',
+                html: `
+                    <div style="background: #000080; color: #ffffff; min-height: 400px; padding: 16px; font-family: 'Times New Roman', Times, serif; text-align: center;">
+                        <div style="font-size: 32px; font-weight: bold; color: #ffd700; text-shadow: 2px 2px #000; letter-spacing: 2px;">
+                            ★★★ GEOCITIES ★★★
+                        </div>
+                        <div style="font-size: 13px; color: #00ffff; margin-bottom: 8px;">
+                            The Largest Community of Personal Web Pages on Earth!
+                        </div>
+                        <div class="geocities-hazard-bar"></div>
+                        <div style="font-size: 14px; font-weight: bold; color: #ffff00; margin: 6px 0;">
+                            🚧 UNDER CONSTRUCTION • PARDON OUR DUST 🚧
+                        </div>
+                        <div class="geocities-hazard-bar"></div>
+
+                        <div style="max-width: 580px; margin: 12px auto; text-align: left; background: #ffffff; color: #000000; padding: 12px; border: 2px outset #ffffff;">
+                            <h3 style="margin-top: 0; color: #000080; border-bottom: 1px solid #808080; padding-bottom: 4px;">Explore GeoCities Neighborhoods:</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+                                <div><a href="#" onclick="window.__ieSearch('SiliconValley Tech Hardware', 'yahoo'); return false;">🏙️ <strong>SiliconValley</strong></a> - Tech, hardware &amp; software</div>
+                                <div><a href="#" onclick="window.__ieSearch('Hollywood Movies Celebrities', 'yahoo'); return false;">🎬 <strong>Hollywood</strong></a> - Film, TV, actors &amp; media</div>
+                                <div><a href="#" onclick="window.__ieSearch('Tokyo Anime Manga Tech', 'yahoo'); return false;">🗼 <strong>Tokyo</strong></a> - Anime, gaming &amp; Asian culture</div>
+                                <div><a href="#" onclick="window.__ieSearch('WallStreet Finance Stocks', 'yahoo'); return false;">📈 <strong>WallStreet</strong></a> - Investing, stock exchange &amp; cash</div>
+                                <div><a href="#" onclick="window.__ieSearch('EnchantedForest Fantasy Folk', 'yahoo'); return false;">🌲 <strong>EnchantedForest</strong></a> - Fairy tales, magic &amp; art</div>
+                                <div><a href="#" onclick="window.__ieSearch('SunsetStrip Music Rock 90s', 'yahoo'); return false;">🎸 <strong>SunsetStrip</strong></a> - Grunge, rock &amp; indie music</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 14px; font-size: 12px;">
+                            <span>You are visitor number: </span>
+                            <span class="geocities-hit-counter">0048219</span>
+                        </div>
+                        <div style="margin-top: 8px; font-size: 11px; color: #ccc;">
+                            [ <a href="#" style="color: #00ffff;" onclick="window.__ieSearch('Sign Guestbook Web 1.0', 'yahoo'); return false;">Sign My Guestbook</a> ] • 
+                            [ <a href="#" style="color: #00ffff;" onclick="window.__ieSearch('View Guestbook Entries', 'yahoo'); return false;">View Guestbook</a> ] • 
+                            [ <a href="#" style="color: #00ffff;" onclick="window.__ieSearch('Join Cyber WebRing', 'yahoo'); return false;">Join WebRing</a> ]
+                        </div>
+                        <div style="margin-top: 12px; font-size: 10px; color: #aaa;">
+                            Best viewed with Netscape Navigator 2.0 or Microsoft Internet Explorer at 800x600 resolution.
+                        </div>
+                    </div>`
+            },
+            'http://www.amazon.com/': {
+                title: 'Amazon.com Books! Earth\'s Biggest Bookstore (1995)',
+                html: `
+                    <div style="font-family: 'Times New Roman', Times, serif; padding: 16px; text-align: left; line-height: 1.5; background: #ffffff; color: #000000;">
+                        <div style="border-bottom: 2px solid #000080; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap;">
+                            <div>
+                                <div style="font-size: 32px; font-weight: bold; color: #000080; letter-spacing: -1px;">amazon.com</div>
+                                <div style="font-size: 13px; font-style: italic; color: #333;">Welcome to Amazon.com Books! • Earth's Biggest Bookstore</div>
+                            </div>
+                            <div style="font-size: 11px; color: #555;">
+                                One Million Titles • Consistently Low Prices
+                            </div>
+                        </div>
+
+                        <div style="background: #eef2f7; border: 1px solid #99b4d1; padding: 10px; margin-bottom: 14px;">
+                            <h3 style="margin: 0 0 6px 0; color: #000080;">📖 SPOTLIGHT OF THE DAY</h3>
+                            <p style="margin: 0 0 6px 0; font-size: 13px;">
+                                <strong>The Road Ahead</strong> by Bill Gates, Nathan Myhrvold, and Peter Rinearson.<br />
+                                <em>Microsoft's CEO explains how the coming information superhighway will transform daily work, communications, and society. Includes companion CD-ROM.</em>
+                            </p>
+                            <button class="win-btn" onclick="window.__ieSearch('The Road Ahead Bill Gates', 'yahoo');" style="padding: 2px 10px; font-size: 11px;">Search in Catalog</button>
+                        </div>
+
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px;">
+                            <div class="win-outset" style="flex: 1; min-width: 220px; padding: 10px; background: #fdfae7;">
+                                <h4 style="margin: 0 0 6px 0; color: #000080;">🔍 Search Amazon.com</h4>
+                                <p style="font-size: 12px; margin: 0 0 8px 0;">Search our database of over 1,000,000 books by Author, Title, Subject, or Keyword:</p>
+                                <button class="win-btn" onclick="window.__ieSearch('Best Selling Books 1995', 'yahoo');" style="padding: 3px 12px; font-size: 11px;">Search Bestsellers</button>
+                            </div>
+                            <div class="win-outset" style="flex: 1; min-width: 220px; padding: 10px; background: #f4f4f4;">
+                                <h4 style="margin: 0 0 6px 0; color: #000080;">🔒 100% Safe Shopping Guarantee</h4>
+                                <p style="font-size: 12px; margin: 0;">Ordering online at Amazon.com is safe and guaranteed. Protected by Netscape Commerce Server SSL Encryption.</p>
+                            </div>
+                        </div>
+
+                        <div style="font-size: 11px; color: #666; border-top: 1px solid #ccc; padding-top: 8px;">
+                            Amazon.com Books Inc., 2250 First Avenue South, Seattle, WA 98134.
+                        </div>
+                    </div>`
+            },
+            'http://www.microsoft.com/': {
+                title: 'Microsoft Corporation: Where do you want to go today? (1995)',
+                html: `
+                    <div style="font-family: Arial, Helvetica, sans-serif; padding: 14px; text-align: left; background: #ffffff; color: #000000;">
+                        <div style="background: #000080; color: #ffffff; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                            <div style="font-size: 24px; font-weight: bold; letter-spacing: -1px;">Microsoft</div>
+                            <div style="font-size: 13px; font-style: italic;">Where do you want to go today?</div>
+                        </div>
+
+                        <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px;">
+                            <div style="flex: 2; min-width: 260px;">
+                                <div class="win-outset" style="padding: 12px; background: #fdfae7; margin-bottom: 10px; border-left: 4px solid #000080;">
+                                    <h2 style="margin: 0 0 6px 0; font-size: 18px; color: #000080;">Start Me Up: Windows 95 is Released Worldwide!</h2>
+                                    <p style="font-size: 13px; line-height: 1.5; margin: 0 0 8px 0;">
+                                        The next-generation 32-bit operating system brings the Start menu, desktop shortcuts, taskbar, long filenames, and seamless Plug and Play hardware support to personal computing.
+                                    </p>
+                                    <button class="win-btn" onclick="window.__ieSearch('Windows 95 Chicago Features', 'yahoo');" style="padding: 3px 12px; font-size: 11px;">Learn More About Windows 95</button>
+                                </div>
+
+                                <div class="win-outset" style="padding: 10px; background: #ffffff;">
+                                    <h4 style="margin: 0 0 6px 0; color: #000080;">⭐ Microsoft Plus! for Windows 95</h4>
+                                    <p style="font-size: 12px; margin: 0 0 6px 0;">
+                                        Includes Microsoft Internet Explorer, 3D Pinball: Space Cadet, Desktop Themes, DriveSpace 3, and System Agent.
+                                    </p>
+                                    <button class="win-btn" onclick="window.__ieSearch('3D Pinball Space Cadet', 'yahoo');" style="padding: 2px 10px; font-size: 11px;">View Microsoft Plus!</button>
+                                </div>
+                            </div>
+
+                            <div style="flex: 1; min-width: 180px;">
+                                <div class="win-outset" style="padding: 10px; background: #eef2f7; font-size: 12px;">
+                                    <strong style="color: #000080;">Quick Downloads:</strong>
+                                    <ul style="margin: 8px 0 0 0; padding-left: 18px; line-height: 1.6;">
+                                        <li><a href="#" onclick="window.__ieSearch('Internet Explorer 3.0 Download', 'yahoo'); return false;">Internet Explorer 3.0</a></li>
+                                        <li><a href="#" onclick="window.__ieSearch('DirectX Gaming SDK', 'yahoo'); return false;">DirectX 2.0 SDK</a></li>
+                                        <li><a href="#" onclick="window.__ieSearch('Windows 95 Service Pack 1', 'yahoo'); return false;">Service Pack 1</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="font-size: 11px; color: #666; border-top: 1px solid #ccc; padding-top: 8px; text-align: center;">
+                            &copy; 1995 Microsoft Corporation. One Microsoft Way, Redmond, WA 98052-6399.
+                        </div>
+                    </div>`
+            },
+            'http://www.imdb.com/': {
+                title: 'The Internet Movie Database (IMDb 1996)',
+                html: `
+                    <div style="font-family: Arial, Helvetica, sans-serif; padding: 14px; text-align: left; background: #ffffff; color: #000000;">
+                        <div style="border-bottom: 2px solid #b8860b; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="background: #f5c518; color: #000; font-weight: 900; font-size: 24px; padding: 2px 8px; border: 1px solid #000;">IMDb</div>
+                                <div>
+                                    <div style="font-size: 18px; font-weight: bold; color: #000;">The Internet Movie Database</div>
+                                    <div style="font-size: 11px; color: #666;">Serving the internet film community since 1990</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 11px; color: #555;">
+                                Over 100,000 titles &amp; 1,500,000 film entries
+                            </div>
+                        </div>
+
+                        <div class="win-outset" style="padding: 10px; background: #fdfae7; margin-bottom: 12px;">
+                            <h3 style="margin: 0 0 6px 0; font-size: 14px; color: #8b0000;">🎬 1995 - 1996 BOX OFFICE HIT MOVIES</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; font-size: 12px;">
+                                <div class="win-btn" style="padding: 4px; text-align: center; cursor: pointer;" onclick="window.__ieSearch('Toy Story 1995 Pixar', 'yahoo');">🧸 Toy Story (1995)</div>
+                                <div class="win-btn" style="padding: 4px; text-align: center; cursor: pointer;" onclick="window.__ieSearch('Independence Day 1996 Will Smith', 'yahoo');">👽 Independence Day (1996)</div>
+                                <div class="win-btn" style="padding: 4px; text-align: center; cursor: pointer;" onclick="window.__ieSearch('Jurassic Park 1993 Spielberg', 'yahoo');">🦖 Jurassic Park (1993)</div>
+                                <div class="win-btn" style="padding: 4px; text-align: center; cursor: pointer;" onclick="window.__ieSearch('Pulp Fiction 1994 Tarantino', 'yahoo');">🕶️ Pulp Fiction (1994)</div>
+                                <div class="win-btn" style="padding: 4px; text-align: center; cursor: pointer;" onclick="window.__ieSearch('GoldenEye 1995 James Bond', 'yahoo');">🍸 GoldenEye (1995)</div>
+                                <div class="win-btn" style="padding: 4px; text-align: center; cursor: pointer;" onclick="window.__ieSearch('Braveheart 1995 Mel Gibson', 'yahoo');">⚔️ Braveheart (1995)</div>
+                            </div>
+                        </div>
+
+                        <div style="font-size: 12px; line-height: 1.6;">
+                            <strong>Browse IMDb Archives:</strong>
+                            <p style="margin: 4px 0;">
+                                • <a href="#" onclick="window.__ieSearch('Academy Award Best Picture 1995', 'yahoo'); return false;">Academy Award Winners &amp; Nominees</a><br />
+                                • <a href="#" onclick="window.__ieSearch('Top 250 Movies of All Time', 'yahoo'); return false;">IMDb Top 250 Movies by User Votes</a><br />
+                                • <a href="#" onclick="window.__ieSearch('Movie Quotes and Trivia', 'yahoo'); return false;">Classic Quotes, Trivia &amp; Goofs Archive</a>
+                            </p>
+                        </div>
+
+                        <div style="font-size: 10px; color: #888; border-top: 1px solid #ccc; margin-top: 12px; padding-top: 6px;">
+                            An Internet Movie Database Ltd production. Maintained by volunteer contributors worldwide.
+                        </div>
+                    </div>`
+            }
+        };
+
+        // ==============================================================
+        // 28.8k DIAL-UP MODEM SOUND SYNTHESIZER (WEB AUDIO API)
+        // ==============================================================
+        let modemSoundEnabled = localStorage.getItem('ie_modem_sound') !== 'false';
+
+        function updateModemSoundUi() {
+            const btnModem = document.getElementById('ie-btn-modem-sound');
+            const lblModem = document.getElementById('ie-modem-status-lbl');
+            const statusText = modemSoundEnabled ? 'ON' : 'OFF';
+            if (btnModem) {
+                btnModem.textContent = `🔊 Sound: ${statusText}`;
+                btnModem.title = `Toggle 28.8k Modem Dial-Up Sound (Currently ${statusText})`;
+            }
+            if (lblModem) {
+                lblModem.textContent = statusText;
+            }
+        }
+
+        function toggleModemSound() {
+            modemSoundEnabled = !modemSoundEnabled;
+            try {
+                localStorage.setItem('ie_modem_sound', modemSoundEnabled ? 'true' : 'false');
+            } catch (e) { }
+            updateModemSoundUi();
+            try { playRetroClick(); } catch (e) { }
+        }
+
+        function playModemConnect() {
+            if (!modemSoundEnabled) return;
+            const ctx = getAudioContext();
+            if (!ctx) return;
+
+            try {
+                const now = ctx.currentTime;
+                // 1. Dial tone snippet (350Hz + 440Hz, 120ms)
+                const o1 = ctx.createOscillator();
+                const o2 = ctx.createOscillator();
+                const gDial = ctx.createGain();
+                o1.frequency.setValueAtTime(350, now);
+                o2.frequency.setValueAtTime(440, now);
+                gDial.gain.setValueAtTime(0.05, now);
+                gDial.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+                o1.connect(gDial);
+                o2.connect(gDial);
+                gDial.connect(ctx.destination);
+                o1.start(now);
+                o2.start(now);
+                o1.stop(now + 0.12);
+                o2.stop(now + 0.12);
+
+                // 2. Quick DTMF chirps (3 pairs, 40ms each)
+                const dtmfPairs = [[941, 1336], [852, 1477], [770, 1209]];
+                dtmfPairs.forEach((pair, idx) => {
+                    const ct = now + 0.14 + (idx * 0.05);
+                    const co1 = ctx.createOscillator();
+                    const co2 = ctx.createOscillator();
+                    const cg = ctx.createGain();
+                    co1.frequency.setValueAtTime(pair[0], ct);
+                    co2.frequency.setValueAtTime(pair[1], ct);
+                    cg.gain.setValueAtTime(0.04, ct);
+                    cg.gain.exponentialRampToValueAtTime(0.001, ct + 0.04);
+                    co1.connect(cg);
+                    co2.connect(cg);
+                    cg.connect(ctx.destination);
+                    co1.start(ct);
+                    co2.start(ct);
+                    co1.stop(ct + 0.04);
+                    co2.stop(ct + 0.04);
+                });
+
+                // 3. Handshake tone (2100Hz whistle down to 1200Hz)
+                const ht = now + 0.32;
+                const ho = ctx.createOscillator();
+                const hg = ctx.createGain();
+                ho.type = 'sawtooth';
+                ho.frequency.setValueAtTime(2100, ht);
+                ho.frequency.setValueAtTime(1200, ht + 0.12);
+                hg.gain.setValueAtTime(0.035, ht);
+                hg.gain.exponentialRampToValueAtTime(0.001, ht + 0.25);
+                ho.connect(hg);
+                hg.connect(ctx.destination);
+                ho.start(ht);
+                ho.stop(ht + 0.25);
+
+                // 4. Filtered carrier negotiation noise burst
+                const nt = now + 0.50;
+                const bufferSize = Math.floor(ctx.sampleRate * 0.35);
+                const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * 0.035;
+                }
+                const noise = ctx.createBufferSource();
+                noise.buffer = buffer;
+                const filter = ctx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.setValueAtTime(1750, nt);
+                const ng = ctx.createGain();
+                ng.gain.setValueAtTime(0.05, nt);
+                ng.gain.exponentialRampToValueAtTime(0.001, nt + 0.35);
+                noise.connect(filter);
+                filter.connect(ng);
+                ng.connect(ctx.destination);
+                noise.start(nt);
+                noise.stop(nt + 0.35);
+            } catch (e) { }
+        }
+
+        // ==============================================================
+        // RECENT HISTORY & ADDRESS BAR SUGGESTIONS
+        // ==============================================================
+        function getRecentHistory() {
+            try {
+                return JSON.parse(localStorage.getItem('ie_recent_history') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function recordRecentHistory(entry) {
+            if (!entry || !entry.url) return;
+            try {
+                let list = getRecentHistory();
+                list = list.filter(i => i.url.toLowerCase() !== entry.url.toLowerCase());
+                list.unshift({
+                    url: entry.url,
+                    title: entry.title || entry.url,
+                    type: entry.type || 'web'
+                });
+                if (list.length > 20) list = list.slice(0, 20);
+                localStorage.setItem('ie_recent_history', JSON.stringify(list));
+            } catch (e) { }
+        }
+
+        const BUILTIN_SUGGESTIONS = [
+            { title: 'Yahoo! Search (1995 Web Directory)', url: 'http://www.yahoo.com/', icon: '🌐', engine: 'yahoo' },
+            { title: 'AltaVista: The Search Company (1995)', url: 'http://www.altavista.digital.com/', icon: '⚡', engine: 'altavista' },
+            { title: 'Google! Beta (1998)', url: 'http://www.google.com/', icon: '🔍', engine: 'google' },
+            { title: 'Lycos: The Catalog of the Web (1995)', url: 'http://www.lycos.com/', icon: '🐕', engine: 'lycos' },
+            { title: 'Find: Files or Folders (Local Drive C:)', url: 'find://c/', icon: '📁', engine: 'find' },
+            { title: 'Welcome to GeoCities! (1995)', url: 'http://www.geocities.com/', icon: '🏙️' },
+            { title: 'Amazon.com: Earth\'s Biggest Bookstore (1995)', url: 'http://www.amazon.com/', icon: '📚' },
+            { title: 'Microsoft: Where do you want to go today? (1995)', url: 'http://www.microsoft.com/', icon: '🪟' },
+            { title: 'IMDb: The Internet Movie Database (1996)', url: 'http://www.imdb.com/', icon: '🎬' },
+            { title: 'Space Jam Official Movie Site (1996)', url: 'http://www.spacejam.com/', icon: '🏀' },
+            { title: 'Welcome to Netscape Communications (1995)', url: 'http://home.netscape.com/', icon: '🧭' },
+            { title: 'Apple Computer: Think Different (1997)', url: 'http://www.apple.com/', icon: '🍏' },
+            { title: 'The World Wide Web Project (CERN 1991)', url: 'http://info.cern.ch/', icon: '🔬' }
+        ];
+
+        const ieAddressSuggestions = document.getElementById('ie-address-suggestions');
+        const ieBtnAddressHistory = document.getElementById('ie-btn-address-history');
+        let selectedSuggestIndex = -1;
+
+        function renderAddressSuggestions(query = '') {
+            if (!ieAddressSuggestions) return;
+            const q = query.trim().toLowerCase();
+            const recents = getRecentHistory();
+            const favs = getCustomFavorites();
+
+            let pool = [];
+
+            // Add recents first
+            recents.forEach(r => {
+                pool.push({ title: r.title, url: r.url, icon: '🕒' });
+            });
+
+            // Add custom favorites
+            favs.forEach(f => {
+                if (!pool.some(p => p.url === f.url)) {
+                    pool.push({ title: f.name, url: f.url, icon: '🔖' });
+                }
+            });
+
+            // Add built-ins
+            BUILTIN_SUGGESTIONS.forEach(b => {
+                if (!pool.some(p => p.url === b.url)) {
+                    pool.push(b);
+                }
+            });
+
+            let matches = pool;
+            if (q) {
+                matches = pool.filter(item =>
+                    item.url.toLowerCase().includes(q) ||
+                    item.title.toLowerCase().includes(q)
+                );
+            }
+
+            if (matches.length === 0) {
+                ieAddressSuggestions.style.display = 'none';
+                ieAddressSuggestions.innerHTML = '';
+                return;
+            }
+
+            matches = matches.slice(0, 10);
+            selectedSuggestIndex = -1;
+
+            ieAddressSuggestions.innerHTML = matches.map((m, idx) => `
+                <div class="ie-suggest-item" data-idx="${idx}" data-url="${escapeHtml(m.url)}" data-engine="${m.engine || ''}">
+                    <div class="ie-suggest-left">
+                        <span>${m.icon || '🌐'}</span>
+                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 260px;">${escapeHtml(m.title)}</span>
+                    </div>
+                    <span class="ie-suggest-url">${escapeHtml(m.url)}</span>
+                </div>
+            `).join('');
+
+            ieAddressSuggestions.style.display = 'block';
+
+            ieAddressSuggestions.querySelectorAll('.ie-suggest-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const url = item.dataset.url;
+                    const eng = item.dataset.engine;
+                    ieAddressSuggestions.style.display = 'none';
+                    if (ieUrlInput) ieUrlInput.value = url;
+                    if (eng) {
+                        loadEngine(eng);
+                    } else if (CLASSIC_PAGES[url]) {
+                        loadPresetPage(url);
+                    } else {
+                        handleAddressSubmit();
+                    }
+                    try { playRetroClick(); } catch (e) { }
+                });
+            });
+        }
+
+        function loadPresetPage(url) {
+            const page = CLASSIC_PAGES[url];
+            if (!page) return;
+            try { playModemConnect(); } catch (e) { }
+            try { recordRecentHistory({ title: page.title, url: url }); } catch (e) { }
+            navigateTo({
+                url: url,
+                title: page.title,
+                engine: activeEngine,
+                html: page.html
+            });
+        }
+
+        window.__ieSearch = (q, engine) => {
+            executeSearch(q, engine || activeEngine);
+        };
+
+        // ==============================================================
         // ADDRESS BAR NAVIGATION HANDLER
         // ==============================================================
         function handleAddressSubmit() {
             if (!ieUrlInput) return;
+            if (ieAddressSuggestions) ieAddressSuggestions.style.display = 'none';
             const val = ieUrlInput.value.trim();
             if (!val) return;
 
             const lower = val.toLowerCase();
-            if (lower.includes('yahoo')) {
+            if (CLASSIC_PAGES[val] || CLASSIC_PAGES[`http://${val}`] || CLASSIC_PAGES[`http://www.${val}`]) {
+                const targetUrl = CLASSIC_PAGES[val] ? val : (CLASSIC_PAGES[`http://${val}`] ? `http://${val}` : `http://www.${val}`);
+                loadPresetPage(targetUrl);
+            } else if (lower.includes('yahoo')) {
                 loadEngine('yahoo');
             } else if (lower.includes('altavista')) {
                 loadEngine('altavista');
@@ -7497,11 +8228,11 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
             } else if (lower.startsWith('find://') || lower === 'find') {
                 loadEngine('find');
             } else if (lower.startsWith('http://') || lower.startsWith('https://') || lower.includes('.com') || lower.includes('.org') || lower.includes('.net') || lower.includes('.id')) {
-                // If it looks like a URL, extract domain/query and search or preview
                 const cleanQuery = val.replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0];
+                try { recordRecentHistory({ title: val, url: val }); } catch (e) { }
                 executeSearch(cleanQuery, activeEngine);
             } else {
-                // Any regular phrase treated as search query!
+                try { recordRecentHistory({ title: `Search: ${val}`, url: val }); } catch (e) { }
                 executeSearch(val, activeEngine);
             }
         }
@@ -7516,11 +8247,59 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
             });
         }
         if (ieUrlInput) {
+            ieUrlInput.addEventListener('input', () => {
+                renderAddressSuggestions(ieUrlInput.value);
+            });
             ieUrlInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
+                    const items = ieAddressSuggestions?.querySelectorAll('.ie-suggest-item') || [];
+                    if (ieAddressSuggestions?.style.display !== 'none' && selectedSuggestIndex >= 0 && items[selectedSuggestIndex]) {
+                        items[selectedSuggestIndex].click();
+                        return;
+                    }
                     handleAddressSubmit();
                     try { playRetroClick(); } catch (e) { }
+                } else if (e.key === 'Escape') {
+                    if (ieAddressSuggestions) ieAddressSuggestions.style.display = 'none';
+                } else if (e.key === 'ArrowDown') {
+                    if (ieAddressSuggestions && ieAddressSuggestions.style.display !== 'none') {
+                        e.preventDefault();
+                        const items = ieAddressSuggestions.querySelectorAll('.ie-suggest-item');
+                        if (items.length > 0) {
+                            selectedSuggestIndex = (selectedSuggestIndex + 1) % items.length;
+                            items.forEach((it, idx) => it.classList.toggle('is-selected', idx === selectedSuggestIndex));
+                            if (items[selectedSuggestIndex]) {
+                                ieUrlInput.value = items[selectedSuggestIndex].dataset.url;
+                            }
+                        }
+                    } else {
+                        renderAddressSuggestions(ieUrlInput.value);
+                    }
+                } else if (e.key === 'ArrowUp') {
+                    if (ieAddressSuggestions && ieAddressSuggestions.style.display !== 'none') {
+                        e.preventDefault();
+                        const items = ieAddressSuggestions.querySelectorAll('.ie-suggest-item');
+                        if (items.length > 0) {
+                            selectedSuggestIndex = (selectedSuggestIndex - 1 + items.length) % items.length;
+                            items.forEach((it, idx) => it.classList.toggle('is-selected', idx === selectedSuggestIndex));
+                            if (items[selectedSuggestIndex]) {
+                                ieUrlInput.value = items[selectedSuggestIndex].dataset.url;
+                            }
+                        }
+                    }
                 }
+            });
+        }
+
+        if (ieBtnAddressHistory) {
+            ieBtnAddressHistory.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (ieAddressSuggestions && ieAddressSuggestions.style.display === 'block') {
+                    ieAddressSuggestions.style.display = 'none';
+                } else {
+                    renderAddressSuggestions(ieUrlInput ? ieUrlInput.value : '');
+                }
+                try { playRetroClick(); } catch (e) { }
             });
         }
 
@@ -7553,11 +8332,206 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
             });
         });
 
-        // Favorites Dropdown Toggle
+        // ==============================================================
+        // VIEW MENU & VIEW SOURCE (NOTEPAD)
+        // ==============================================================
+        const ieViewDropdown = document.getElementById('ie-view-dropdown');
+        const ieBtnViewMenu = document.getElementById('ie-menu-view');
+        const ieActionViewSource = document.getElementById('ie-action-view-source');
+        const ieActionRefreshMenu = document.getElementById('ie-action-refresh-menu');
+        const ieActionHomeMenu = document.getElementById('ie-action-home-menu');
+
+        function toggleViewMenu(show) {
+            if (!ieViewDropdown) return;
+            const willShow = show !== undefined ? show : ieViewDropdown.style.display === 'none';
+            ieViewDropdown.style.display = willShow ? 'block' : 'none';
+        }
+
+        if (ieBtnViewMenu) {
+            ieBtnViewMenu.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleViewMenu();
+                if (ieFavoritesDropdown) ieFavoritesDropdown.style.display = 'none';
+                if (ieToolsDropdown) ieToolsDropdown.style.display = 'none';
+                try { playRetroClick(); } catch (e) { }
+            });
+        }
+
+        if (ieActionRefreshMenu) {
+            ieActionRefreshMenu.addEventListener('click', () => {
+                toggleViewMenu(false);
+                refreshCurrent();
+            });
+        }
+        if (ieActionHomeMenu) {
+            ieActionHomeMenu.addEventListener('click', () => {
+                toggleViewMenu(false);
+                loadEngine('yahoo');
+            });
+        }
+
+        if (ieActionViewSource) {
+            ieActionViewSource.addEventListener('click', () => {
+                toggleViewMenu(false);
+                const currentHtml = ieContentArea ? ieContentArea.innerHTML : '';
+                const sourceTextarea = document.getElementById('ie-source-textarea');
+                const sourceTitle = document.getElementById('ie-source-title');
+                const currentUrl = historyStack[historyIndex]?.url || 'http://www.yahoo.com/';
+
+                if (sourceTitle) sourceTitle.textContent = `Notepad - [Source of ${currentUrl}]`;
+                if (sourceTextarea) sourceTextarea.value = currentHtml;
+
+                if (typeof openModal === 'function') openModal('ie-modal-source-backdrop');
+                try { playRetroClick(); } catch (e) { }
+            });
+        }
+
+        const btnCloseSourceX = document.getElementById('ie-btn-close-source-x');
+        const btnCloseSource = document.getElementById('ie-btn-close-source');
+        const btnCopySource = document.getElementById('ie-btn-copy-source');
+
+        if (btnCloseSourceX) btnCloseSourceX.addEventListener('click', () => closeModal('ie-modal-source-backdrop'));
+        if (btnCloseSource) btnCloseSource.addEventListener('click', () => closeModal('ie-modal-source-backdrop'));
+        if (btnCopySource) {
+            btnCopySource.addEventListener('click', () => {
+                const sourceTextarea = document.getElementById('ie-source-textarea');
+                if (sourceTextarea) {
+                    navigator.clipboard.writeText(sourceTextarea.value);
+                    const originalText = btnCopySource.textContent;
+                    btnCopySource.textContent = 'Copied!';
+                    setTimeout(() => { btnCopySource.textContent = originalText; }, 1200);
+                }
+            });
+        }
+
+        // ==============================================================
+        // TOOLS MENU & MODEM SOUND TOGGLE
+        // ==============================================================
+        const ieToolsDropdown = document.getElementById('ie-tools-dropdown');
+        const ieMenuTools = document.getElementById('ie-menu-tools');
+        const ieActionToggleModem = document.getElementById('ie-action-toggle-modem');
+        const ieActionClearCache = document.getElementById('ie-action-clear-cache');
+        const ieBtnModemSound = document.getElementById('ie-btn-modem-sound');
+
+        function toggleToolsMenu(show) {
+            if (!ieToolsDropdown) return;
+            const willShow = show !== undefined ? show : ieToolsDropdown.style.display === 'none';
+            ieToolsDropdown.style.display = willShow ? 'block' : 'none';
+        }
+
+        if (ieMenuTools) {
+            ieMenuTools.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleToolsMenu();
+                if (ieViewDropdown) ieViewDropdown.style.display = 'none';
+                if (ieFavoritesDropdown) ieFavoritesDropdown.style.display = 'none';
+                try { playRetroClick(); } catch (e) { }
+            });
+        }
+
+        if (ieActionToggleModem) {
+            ieActionToggleModem.addEventListener('click', () => {
+                toggleToolsMenu(false);
+                toggleModemSound();
+            });
+        }
+
+        if (ieBtnModemSound) {
+            ieBtnModemSound.addEventListener('click', () => {
+                toggleModemSound();
+            });
+        }
+
+        if (ieActionClearCache) {
+            ieActionClearCache.addEventListener('click', () => {
+                toggleToolsMenu(false);
+                try {
+                    localStorage.removeItem('ie_recent_history');
+                } catch (e) { }
+                setStatus('Temporary internet files and history cleared.');
+                if (ieAddressSuggestions) ieAddressSuggestions.style.display = 'none';
+                try { playRetroClick(); } catch (e) { }
+            });
+        }
+
+        // ==============================================================
+        // FAVORITES DROPDOWN & CUSTOM BOOKMARKS (LOCALSTORAGE)
+        // ==============================================================
+        const ieActionAddFav = document.getElementById('ie-action-add-fav');
+        const ieAddFavName = document.getElementById('ie-add-fav-name');
+        const btnAddFavOk = document.getElementById('ie-btn-add-fav-ok');
+        const btnAddFavCancel = document.getElementById('ie-btn-add-fav-cancel');
+        const btnCloseFavX = document.getElementById('ie-btn-close-fav-x');
+        const customFavsBox = document.getElementById('ie-custom-favs-box');
+        const customFavsList = document.getElementById('ie-custom-favs-list');
+
+        function getCustomFavorites() {
+            try {
+                return JSON.parse(localStorage.getItem('ie_custom_favorites') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveCustomFavorites(list) {
+            try {
+                localStorage.setItem('ie_custom_favorites', JSON.stringify(list));
+            } catch (e) { }
+        }
+
+        function renderCustomFavorites() {
+            if (!customFavsBox || !customFavsList) return;
+            const favs = getCustomFavorites();
+            if (favs.length === 0) {
+                customFavsBox.style.display = 'none';
+                customFavsList.innerHTML = '';
+                return;
+            }
+            customFavsBox.style.display = 'block';
+            customFavsList.innerHTML = favs.map((f, idx) => `
+                <div class="ie-fav-item" data-fav-url="${escapeHtml(f.url)}">
+                    <span>🔖</span>
+                    <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 170px;">${escapeHtml(f.name)}</span>
+                    <span class="ie-del-fav" data-del-idx="${idx}" title="Delete bookmark">&times;</span>
+                </div>
+            `).join('');
+
+            customFavsList.querySelectorAll('.ie-fav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('ie-del-fav')) {
+                        e.stopPropagation();
+                        const delIdx = parseInt(e.target.dataset.delIdx, 10);
+                        const cur = getCustomFavorites();
+                        cur.splice(delIdx, 1);
+                        saveCustomFavorites(cur);
+                        renderCustomFavorites();
+                        return;
+                    }
+                    toggleFavorites(false);
+                    const url = item.dataset.favUrl;
+                    if (url) {
+                        if (CLASSIC_PAGES[url]) {
+                            loadPresetPage(url);
+                        } else if (url.startsWith('find://')) {
+                            loadEngine('find');
+                        } else {
+                            executeSearch(url, activeEngine);
+                        }
+                    }
+                    try { playRetroClick(); } catch (e) { }
+                });
+            });
+        }
+
         function toggleFavorites(show) {
             if (!ieFavoritesDropdown) return;
             const willShow = show !== undefined ? show : ieFavoritesDropdown.style.display === 'none';
             ieFavoritesDropdown.style.display = willShow ? 'block' : 'none';
+            if (willShow) {
+                if (ieViewDropdown) ieViewDropdown.style.display = 'none';
+                if (ieToolsDropdown) ieToolsDropdown.style.display = 'none';
+                renderCustomFavorites();
+            }
         }
 
         if (ieBtnFavorites) {
@@ -7575,10 +8549,56 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
             });
         }
 
+        if (ieActionAddFav) {
+            ieActionAddFav.addEventListener('click', () => {
+                toggleFavorites(false);
+                const curState = historyStack[historyIndex];
+                if (ieAddFavName) {
+                    ieAddFavName.value = curState?.title || 'My Favorite Web Page';
+                }
+                if (typeof openModal === 'function') openModal('ie-modal-add-fav-backdrop');
+                try { playRetroClick(); } catch (e) { }
+            });
+        }
+
+        if (btnAddFavCancel) btnAddFavCancel.addEventListener('click', () => closeModal('ie-modal-add-fav-backdrop'));
+        if (btnCloseFavX) btnCloseFavX.addEventListener('click', () => closeModal('ie-modal-add-fav-backdrop'));
+
+        if (btnAddFavOk) {
+            btnAddFavOk.addEventListener('click', () => {
+                const name = ieAddFavName ? ieAddFavName.value.trim() : '';
+                const curState = historyStack[historyIndex];
+                const url = curState?.url || (ieUrlInput ? ieUrlInput.value : 'http://www.yahoo.com/');
+                if (name) {
+                    const favs = getCustomFavorites();
+                    favs.push({ name, url });
+                    saveCustomFavorites(favs);
+                    renderCustomFavorites();
+                }
+                if (typeof closeModal === 'function') closeModal('ie-modal-add-fav-backdrop');
+                try { playRetroClick(); } catch (e) { }
+            });
+        }
+
         document.addEventListener('click', (e) => {
             if (ieFavoritesDropdown && ieFavoritesDropdown.style.display !== 'none') {
                 if (!e.target.closest('#ie-favorites-dropdown') && !e.target.closest('#ie-btn-favorites') && !e.target.closest('#ie-menu-fav')) {
                     toggleFavorites(false);
+                }
+            }
+            if (ieViewDropdown && ieViewDropdown.style.display !== 'none') {
+                if (!e.target.closest('#ie-view-dropdown') && !e.target.closest('#ie-menu-view')) {
+                    toggleViewMenu(false);
+                }
+            }
+            if (ieToolsDropdown && ieToolsDropdown.style.display !== 'none') {
+                if (!e.target.closest('#ie-tools-dropdown') && !e.target.closest('#ie-menu-tools')) {
+                    toggleToolsMenu(false);
+                }
+            }
+            if (ieAddressSuggestions && ieAddressSuggestions.style.display !== 'none') {
+                if (!e.target.closest('#ie-address-suggestions') && !e.target.closest('#ie-btn-address-history') && !e.target.closest('#ie-url-input')) {
+                    ieAddressSuggestions.style.display = 'none';
                 }
             }
         });
@@ -7586,6 +8606,9 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
         // Favorites Items
         document.querySelectorAll('.ie-fav-item').forEach(item => {
             item.addEventListener('click', () => {
+                if (item.id === 'ie-action-add-fav' || item.id === 'ie-action-view-source' || item.id === 'ie-action-refresh-menu' || item.id === 'ie-action-home-menu' || item.id === 'ie-action-toggle-modem' || item.id === 'ie-action-clear-cache') {
+                    return;
+                }
                 toggleFavorites(false);
                 const action = item.dataset.action;
                 const engine = item.dataset.engine;
@@ -7594,7 +8617,8 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
                 if (action === 'engine' && engine) {
                     loadEngine(engine);
                 } else if (url) {
-                    if (url.includes('yahoo')) loadEngine('yahoo');
+                    if (CLASSIC_PAGES[url]) loadPresetPage(url);
+                    else if (url.includes('yahoo')) loadEngine('yahoo');
                     else if (url.includes('altavista')) loadEngine('altavista');
                     else if (url.includes('google')) loadEngine('google');
                     else if (url.includes('lycos')) loadEngine('lycos');
@@ -7604,6 +8628,26 @@ SECRET   BAT        1,024   16-09-25  12:00p Secret.bat
                 try { playRetroClick(); } catch (e) { }
             });
         });
+
+        // ==============================================================
+        // START MENU INTEGRATION: "Find: Files or Folders..."
+        // ==============================================================
+        const startMenuFind = document.getElementById('start-menu-find');
+        if (startMenuFind) {
+            startMenuFind.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (typeof activateWindow === 'function') {
+                    activateWindow('ie-window');
+                }
+                loadEngine('find');
+                const startMenu = document.getElementById('start-menu');
+                if (startMenu) startMenu.classList.remove('is-open');
+                try { playRetroClick(); } catch (e) { }
+            });
+        }
+
+        updateModemSoundUi();
+        renderCustomFavorites();
 
         // Initialize default view to Yahoo! (1995)
         loadEngine('yahoo');
